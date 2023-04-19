@@ -1,4 +1,5 @@
 import pygame
+import time
 
 # inicia o pygame
 pygame.init()
@@ -14,6 +15,38 @@ janela = pygame.display.set_mode((0, 0), pygame.FULLSCREEN|pygame.NOFRAME)
 # define as dimensões da janela
 largura_janela = janela.get_width()
 altura_janela = janela.get_height()
+
+def janela_inicial():
+    imagem_fundo = pygame.image.load(r"2º Semestre\Laboratório De Progamação\Trabalhos\2. SENET\FUNDOINICIO.png")
+    imagem_fundo = pygame.transform.scale(imagem_fundo, (largura_tela, altura_tela))
+
+    cor_texto = '#ffffff'
+    fonte = pygame.font.SysFont('romansd', 40)
+
+    mensagem = fonte.render('Clique para começar', True, cor_texto)
+    x_mensagem = largura_tela // 2 - mensagem.get_width() // 2
+    y_mensagem = altura_tela // 1.4 - mensagem.get_height() // 1.4
+
+    piscando = True
+    tempo_piscar = 1
+
+    while piscando:
+        janela.blit(imagem_fundo, (0, 0))
+
+        if time.time() % tempo_piscar < tempo_piscar / 2:
+            janela.blit(mensagem, (x_mensagem, y_mensagem))
+
+        pygame.display.update()
+
+        for evento in pygame.event.get():
+            if evento.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+            if evento.type == pygame.MOUSEBUTTONDOWN:
+                piscando = False
+
+janela_inicial()
 
 # define a função para o menu principal
 def menu_principal():
@@ -53,7 +86,7 @@ def menu_principal():
     imagem_fundo = pygame.image.load(r"2º Semestre\Laboratório De Progamação\Trabalhos\2. SENET\FUNDO.png")
 
     # redimensiona a imagem para as dimensões da janela
-    imagem_fundo = pygame.transform.scale(imagem_fundo, (largura_janela, altura_janela))
+    imagem_fundo = pygame.transform.smoothscale(imagem_fundo, (largura_janela, altura_janela))
 
     # define a flag para verificar se o menu está em execução
     executando = True
@@ -116,7 +149,7 @@ def descricao_jogo():
     imagem_fundo = pygame.image.load(r"2º Semestre\Laboratório De Progamação\Trabalhos\2. SENET\REGRAS.png")
 
     # redimensiona a imagem para as dimensões da janela
-    imagem_fundo = pygame.transform.scale(imagem_fundo, (largura_janela, altura_janela))
+    imagem_fundo = pygame.transform.smoothscale(imagem_fundo, (largura_janela, altura_janela))
     
     # Define as fontes
     fonte_titulo = pygame.font.SysFont('romansd', 40, bold=True)
