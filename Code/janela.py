@@ -1,9 +1,10 @@
 import pygame
 import time
+import os
 
 class Janela():
     def janela_inicial(janela, largura_janela, altura_janela):
-        imagem_fundo = pygame.image.load(r"Trabalhos\Senet\Images\FUNDOINICIO.png")
+        imagem_fundo = pygame.image.load(os.path.join('images', 'FUNDOINICIO.png'))
         imagem_fundo = pygame.transform.scale(imagem_fundo, (largura_janela, altura_janela))
 
         cor_texto = '#ffffff'

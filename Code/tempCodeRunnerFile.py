@@ -1,0 +1,1 @@
+pygame.transform.smoothscale

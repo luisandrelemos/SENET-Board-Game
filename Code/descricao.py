@@ -1,4 +1,5 @@
 import pygame
+import os
 
 class Regras:
     def descricao_jogo(janela, largura_janela, altura_janela):
@@ -11,7 +12,7 @@ class Regras:
         cor_sombra = '#000000'
 
         # carrega a imagem de fundo
-        imagem_fundo = pygame.image.load(r"Trabalhos\Senet\Images\REGRAS.png")
+        imagem_fundo = pygame.image.load(os.path.join('images', 'REGRAS.png'))
 
         # redimensiona a imagem para as dimensões da janela
         imagem_fundo = pygame.transform.smoothscale(imagem_fundo, (largura_janela, altura_janela))

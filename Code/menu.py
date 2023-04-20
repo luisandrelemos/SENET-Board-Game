@@ -1,4 +1,5 @@
 import pygame
+import os
 from jogar import Jogar
 from carregar import Carregar
 from descricao import Regras
@@ -39,7 +40,7 @@ class Menu:
             botoes.append({'retangulo': botao, 'texto': opcao['texto'], 'cor': cor_botao_normal, 'funcao': opcao['funcao']})
 
         # carrega a imagem de fundo
-        imagem_fundo = pygame.image.load(r"Trabalhos\Senet\Images\FUNDO.png")
+        imagem_fundo = pygame.image.load(os.path.join('images', 'FUNDO.png'))
 
         # redimensiona a imagem para as dimensões da janela
         imagem_fundo = pygame.transform.smoothscale(imagem_fundo, (largura_janela, altura_janela))
