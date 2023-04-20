@@ -20,7 +20,7 @@ class Menu:
 
         # define as opções do menu
         opcoes = [
-            {'texto': 'Jogar Partida', 'funcao': Jogar.jogar_partida},
+            {'texto': 'Jogar Partida', 'funcao': lambda :Jogar.jogar_partida(janela, largura_janela, altura_janela)},
             {'texto': 'Carregar', 'funcao': Carregar.carregar_partida},
             {'texto': 'Descrição', 'funcao': lambda: Regras.descricao_jogo(janela, largura_janela, altura_janela)},
             {'texto': 'Sair', 'funcao': Sair.sair}
