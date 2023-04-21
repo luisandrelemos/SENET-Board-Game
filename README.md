@@ -1,4 +1,5 @@
 # SENET-Board-Game 🛕🎲
+
 Senet is an ancient Egyptian board game that was popular during the New Kingdom period, around 1550-1077 BCE. The game consists of a board with 30 squares arranged in three rows of ten, and each player has a set of pieces that are moved along the board according to dice rolls. 🐪
 
 The objective of the game is to move all of your pieces off the board before your opponent does. The game also involves strategy and tactics, as players can block their opponent's moves and capture their pieces. 🛕

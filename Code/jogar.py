@@ -14,7 +14,7 @@ class Jogar:
         largura_tracado = 2
 
         # carrega a imagem de fundo
-        imagem_fundo = pygame.image.load(os.path.join('images', 'LUIS.jpeg'))
+        imagem_fundo = pygame.image.load(os.path.join('images', 'JOGO.png'))
 
         # redimensiona a imagem para as dimensões da janela
         imagem_fundo = pygame.transform.smoothscale(imagem_fundo, (largura_janela, altura_janela))
