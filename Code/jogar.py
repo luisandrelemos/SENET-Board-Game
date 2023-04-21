@@ -1,16 +1,14 @@
 import pygame
 import os
 
-
 class Jogar:
     def jogar_partida(janela, largura_janela, altura_janela):
         # Define as variáveis de cor
-        cor_fundo = (255, 255, 255)
-        cor_texto = '#fefefe'
+        cor_texto = '#000000'
+        cor_texto_tela_pausa = '#ffffff'
         cor_tracado = '#d8b645'
         cor_botao_normal = '#c4c1c1ff'
         cor_botao_hover = '#d8b645'
-        cor_sombra = '#000000'
 
         # Define a largura da linha de traçado
         largura_tracado = 2
@@ -37,7 +35,6 @@ class Jogar:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
-                    ()
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         if not pausado:
@@ -65,9 +62,6 @@ class Jogar:
                                     pygame.quit()
                                     quit()
 
-            # Preenche a janela com a cor de fundo
-            janela.fill(cor_fundo)
-
             # Desenha a imagem de fundo
             janela.blit(imagem_fundo, (0, 0))
 
@@ -78,7 +72,7 @@ class Jogar:
                 pygame.draw.rect(tela_pausa, (0, 0, 0, 128), tela_pausa.get_rect())
                 janela.blit(tela_pausa, (0, 0))
 
-                texto_pausado = fonte_titulo.render('Jogo Pausado', True, cor_texto)
+                texto_pausado = fonte_titulo.render('Jogo Pausado', True, cor_texto_tela_pausa)
                 janela.blit(texto_pausado, (largura_janela // 2 - texto_pausado.get_width() // 2, altura_janela // 2 - 50))
 
                 opcoes = ['Continuar', 'Salvar Jogo', 'Menu', 'Sair']
@@ -87,18 +81,17 @@ class Jogar:
                     texto_opcao = fonte_texto.render(opcao, True, cor_texto)
                     x_opcao = largura_janela // 2 - texto_opcao.get_width() // 2
 
-                    # Desenha o retângulo sombreado
-                    pygame.draw.rect(janela, cor_sombra, (x_opcao + 2, y_opcao + 5, texto_opcao.get_width() + 15, texto_opcao.get_height() + 13))
-                    pygame.draw.rect(janela, cor_botao_normal, (x_opcao, y_opcao, texto_opcao.get_width()+10, texto_opcao.get_height()+10))
+                    # Desenha os botoes
+                    pygame.draw.rect(janela, cor_botao_normal, (x_opcao, y_opcao, texto_opcao.get_width()+10, texto_opcao.get_height()+10), border_radius=10)
 
                     # Desenha o traçado
-                    pygame.draw.rect(janela, cor_tracado, (x_opcao, y_opcao, texto_opcao.get_width()+10, texto_opcao.get_height()+10), largura_tracado)
+                    pygame.draw.rect(janela, cor_tracado, (x_opcao, y_opcao, texto_opcao.get_width()+10, texto_opcao.get_height()+10), 3, border_radius=10)
 
                     # Verifica se o mouse está em cima da opção
-                    if pygame.Rect(x_opcao, y_opcao, texto_opcao.get_width(), texto_opcao.get_height()).collidepoint(pygame.mouse.get_pos()):
-                        pygame.draw.rect(janela, cor_botao_hover, (x_opcao, y_opcao, texto_opcao.get_width(), texto_opcao.get_height()))
+                    if pygame.Rect(x_opcao - 5, y_opcao - 5, texto_opcao.get_width() + 20, texto_opcao.get_height() + 20).collidepoint(pygame.mouse.get_pos()):
+                        pygame.draw.rect(janela, cor_botao_hover, (x_opcao, y_opcao, texto_opcao.get_width() + 10, texto_opcao.get_height() + 10), border_radius=10)
 
-                    janela.blit(texto_opcao, (x_opcao, y_opcao))
+                    janela.blit(texto_opcao, (x_opcao+5, y_opcao+5))
                     y_opcao += 50
 
             # Atualiza a janela
