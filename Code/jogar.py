@@ -13,15 +13,43 @@ class Jogar:
         # Define a largura da linha de traçado
         largura_tracado = 2
 
-        # carrega a imagem de fundo
+        # Carrega a imagem de fundo
         imagem_fundo = pygame.image.load(os.path.join('images', 'JOGO.png'))
 
-        # redimensiona a imagem para as dimensões da janela
+        # Redimensiona a imagem para as dimensões da janela
         imagem_fundo = pygame.transform.smoothscale(imagem_fundo, (largura_janela, altura_janela))
+
+        # Carrega as imagens das peças
+        branca1 = pygame.image.load(os.path.join('images', 'Peças', 'WHITE1.png'))
+        branca2 = pygame.image.load(os.path.join('images', 'Peças', 'WHITE2.png'))
+        branca3 = pygame.image.load(os.path.join('images', 'Peças', 'WHITE3.png'))
+        branca4 = pygame.image.load(os.path.join('images', 'Peças', 'WHITE4.png'))
+        branca5 = pygame.image.load(os.path.join('images', 'Peças', 'WHITE5.png'))
+        preta1 = pygame.image.load(os.path.join('images', 'Peças', 'BLACK1.png'))
+        preta2 = pygame.image.load(os.path.join('images', 'Peças', 'BLACK2.png'))
+        preta3 = pygame.image.load(os.path.join('images', 'Peças', 'BLACK3.png'))
+        preta4 = pygame.image.load(os.path.join('images', 'Peças', 'BLACK4.png'))
+        preta5 = pygame.image.load(os.path.join('images', 'Peças', 'BLACK5.png'))
+
+        # Redimensiona as imagens das peças
+        tamanho_novo = (branca1.get_width() // 1.45, branca1.get_height() // 1.45)
+        branca1 = pygame.transform.smoothscale(branca1, tamanho_novo)
+        branca2 = pygame.transform.smoothscale(branca2, tamanho_novo)
+        branca3 = pygame.transform.smoothscale(branca3, tamanho_novo)
+        branca4 = pygame.transform.smoothscale(branca4, tamanho_novo)
+        branca5 = pygame.transform.smoothscale(branca5, tamanho_novo)
+        preta1 = pygame.transform.smoothscale(preta1, tamanho_novo)
+        preta2 = pygame.transform.smoothscale(preta2, tamanho_novo)
+        preta3 = pygame.transform.smoothscale(preta3, tamanho_novo)
+        preta4 = pygame.transform.smoothscale(preta4, tamanho_novo)
+        preta5 = pygame.transform.smoothscale(preta5, tamanho_novo)
 
         # Define as fontes
         fonte_titulo = pygame.font.SysFont('romansd', 40)
         fonte_texto = pygame.font.SysFont('romansd', 25)
+
+        posicoes_pecas = [(285, 300), (385, 300), (485, 300), (585, 300), (685, 300), 
+                          (782, 300), (880, 300), (977, 300), (1076, 300), (1174, 300)]
 
         # Define a flag para verificar se a descrição está em execução
         executando = True
@@ -64,6 +92,17 @@ class Jogar:
 
             # Desenha a imagem de fundo
             janela.blit(imagem_fundo, (0, 0))
+
+            janela.blit(branca1, posicoes_pecas[0])
+            janela.blit(preta1, posicoes_pecas[1])
+            janela.blit(branca2, posicoes_pecas[2])
+            janela.blit(preta2, posicoes_pecas[3])
+            janela.blit(branca3, posicoes_pecas[4])
+            janela.blit(preta3, posicoes_pecas[5])
+            janela.blit(branca4, posicoes_pecas[6])
+            janela.blit(preta4, posicoes_pecas[7])
+            janela.blit(branca5, posicoes_pecas[8])
+            janela.blit(preta5, posicoes_pecas[9])
 
             # Verifica se o jogo está pausado
             if pausado:
