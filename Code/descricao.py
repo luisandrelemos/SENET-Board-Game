@@ -24,8 +24,8 @@ class Regras:
         # Define o botão Voltar
         largura_botao = 150
         altura_botao = 50
-        x_botao = largura_janela // 1.03 - largura_botao // 1.03
-        y_botao = altura_janela - altura_botao - 20
+        x_botao = largura_janela // 1.02 - largura_botao // 1.02
+        y_botao = altura_janela - altura_botao - 27
         botao_voltar = pygame.Rect(x_botao, y_botao, largura_botao, altura_botao)
 
         # Define a flag para verificar se a descrição está em execução
@@ -51,7 +51,7 @@ class Regras:
                 cor_botao = cor_botao_hover
             else:
                 cor_botao = cor_botao_normal
-            pygame.draw.rect(janela, cor_sombra, (botao_voltar.left + 5, botao_voltar.top + 5, largura_botao, altura_botao))
+            #pygame.draw.rect(janela, cor_sombra, (botao_voltar.left + 5, botao_voltar.top + 5, largura_botao, altura_botao))
             pygame.draw.rect(janela, cor_botao, botao_voltar)
             pygame.draw.rect(janela, cor_tracado, botao_voltar, 2)
             texto_voltar = fonte_texto.render('Voltar', True, cor_texto)
