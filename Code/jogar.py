@@ -1,5 +1,6 @@
 import pygame
 import os
+import random
 
 class Jogar:
     def jogar_partida(janela, largura_janela, altura_janela):
@@ -10,14 +11,39 @@ class Jogar:
         cor_botao_normal = '#c4c1c1ff'
         cor_botao_hover = '#d8b645'
 
-        # Define a largura da linha de traçado
-        largura_tracado = 2
-
         # Carrega a imagem de fundo
         imagem_fundo = pygame.image.load(os.path.join('images', 'JOGO.png'))
 
         # Redimensiona a imagem para as dimensões da janela
         imagem_fundo = pygame.transform.smoothscale(imagem_fundo, (largura_janela, altura_janela))
+
+        # Carregue as imagens dos paus
+        pau_preto = pygame.image.load(os.path.join('images', 'Sticks', 'BLACK.png'))
+        pau_branco = pygame.image.load(os.path.join('images', 'Sticks', 'WHITE.png'))
+
+        # Função para escolher aleatoriamente as cores das peças
+        def escolher_cores():
+            cores = ["WHITE", "BLACK"]
+            peças = []
+            for i in range(4):
+                cor = random.choice(cores)
+                if cor == "WHITE":
+                    imagem_peca = pau_branco
+                else:
+                    imagem_peca = pau_preto
+                peças.append((cor, imagem_peca))
+            return peças
+        
+        # Função para desenhar as peças na tela
+        def desenhar_peças(peças):
+            pos_x = 250
+            pos_y = 675
+            for cor, imagem_peca in peças:
+                imagem_fundo.blit(imagem_peca, (pos_x, pos_y))
+                pos_x += 100
+                print(cor)
+
+        peças = escolher_cores()
 
         # Carrega as imagens das peças
         branca1 = pygame.image.load(os.path.join('images', 'Peças', 'WHITE1.png'))
@@ -43,6 +69,9 @@ class Jogar:
         preta3 = pygame.transform.smoothscale(preta3, tamanho_novo)
         preta4 = pygame.transform.smoothscale(preta4, tamanho_novo)
         preta5 = pygame.transform.smoothscale(preta5, tamanho_novo)
+
+        # Desenhe as peças na tela
+        desenhar_peças(peças)
 
         # Define as fontes
         fonte_titulo = pygame.font.SysFont('romansd', 40)
@@ -108,7 +137,7 @@ class Jogar:
             if pausado:
                 # Desenha a tela de pausa
                 tela_pausa = pygame.Surface((largura_janela, altura_janela), pygame.SRCALPHA)
-                pygame.draw.rect(tela_pausa, (0, 0, 0, 128), tela_pausa.get_rect())
+                pygame.draw.rect(tela_pausa, (0, 0, 0, 200), tela_pausa.get_rect())
                 janela.blit(tela_pausa, (0, 0))
 
                 texto_pausado = fonte_titulo.render('Jogo Pausado', True, cor_texto_tela_pausa)
@@ -124,7 +153,7 @@ class Jogar:
                     pygame.draw.rect(janela, cor_botao_normal, (x_opcao, y_opcao, texto_opcao.get_width()+10, texto_opcao.get_height()+10), border_radius=10)
 
                     # Desenha o traçado
-                    pygame.draw.rect(janela, cor_tracado, (x_opcao, y_opcao, texto_opcao.get_width()+10, texto_opcao.get_height()+10), 3, border_radius=10)
+                    pygame.draw.rect(janela, cor_tracado, (x_opcao, y_opcao, texto_opcao.get_width()+10, texto_opcao.get_height()+10), 2, border_radius=10)
 
                     # Verifica se o mouse está em cima da opção
                     if pygame.Rect(x_opcao - 5, y_opcao - 5, texto_opcao.get_width() + 20, texto_opcao.get_height() + 20).collidepoint(pygame.mouse.get_pos()):
