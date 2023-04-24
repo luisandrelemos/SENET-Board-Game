@@ -8,4 +8,4 @@ Senet was not only a game, but also had religious and symbolic significance in a
 
 The rules of Senet are not completely known, as they were not written down until much later in history. However, modern interpretations of the game have been developed based on archaeological evidence and ancient texts. 🏺
 
-Despite its ancient origins, Senet has remained popular to this day, with many modern versions of the game available. It continues to be a fascinating and challenging game, offering a glimpse into the ancient world and the culture of the Egyptians who played it. 🎲
+Despite its ancient origins, Senet has remained popular to this day, with many modern versions of the game available. This version of the game is adapted in python made by me and two other groupmates for a university project. Hope you like it! 🎲
