@@ -19,7 +19,9 @@ class Jogar:
 
         # Carregue as imagens dos paus
         pau_preto = pygame.image.load(os.path.join('images', 'Sticks', 'BLACK.png'))
+        pau_preto = pygame.transform.scale(pau_preto, (pau_preto.get_width() * 1.3, pau_preto.get_height() * 1.3))
         pau_branco = pygame.image.load(os.path.join('images', 'Sticks', 'WHITE.png'))
+        pau_branco = pygame.transform.scale(pau_branco, (pau_branco.get_width() * 1.3, pau_branco.get_height() * 1.3))
 
         # Função para escolher aleatoriamente as cores das peças
         def escolher_cores():
@@ -37,7 +39,7 @@ class Jogar:
         # Função para desenhar as peças na tela
         def desenhar_peças(peças):
             pos_x = 250
-            pos_y = 675
+            pos_y = 660
             for cor, imagem_peca in peças:
                 imagem_fundo.blit(imagem_peca, (pos_x, pos_y))
                 pos_x += 100
@@ -140,8 +142,8 @@ class Jogar:
                 pygame.draw.rect(tela_pausa, (0, 0, 0, 200), tela_pausa.get_rect())
                 janela.blit(tela_pausa, (0, 0))
 
-                texto_pausado = fonte_titulo.render('Jogo Pausado', True, cor_texto_tela_pausa)
-                janela.blit(texto_pausado, (largura_janela // 2 - texto_pausado.get_width() // 2, altura_janela // 2 - 50))
+                tela_pausa = fonte_titulo.render('Jogo Pausado', True, cor_texto_tela_pausa)
+                janela.blit(tela_pausa, (largura_janela // 2 - tela_pausa.get_width() // 2, altura_janela // 2 - 50))
 
                 opcoes = ['Continuar', 'Salvar Jogo', 'Menu', 'Sair']
                 y_opcao = altura_janela // 2 + 50

@@ -4,12 +4,10 @@ import os
 class Regras:
     def descricao_jogo(janela, largura_janela, altura_janela):
         # Define as variáveis de cor
-        cor_fundo = (255, 255, 255)
         cor_texto = '#000000'
         cor_tracado = '#d8b645'
         cor_botao_normal = '#c4c1c1ff'
         cor_botao_hover = '#d8b645'
-        cor_sombra = '#000000'
 
         # carrega a imagem de fundo
         imagem_fundo = pygame.image.load(os.path.join('images', 'REGRAS.png'))
@@ -18,7 +16,6 @@ class Regras:
         imagem_fundo = pygame.transform.smoothscale(imagem_fundo, (largura_janela, altura_janela))
         
         # Define as fontes
-        fonte_titulo = pygame.font.SysFont('romansd', 40, bold=True)
         fonte_texto = pygame.font.SysFont('romansd', 25)
 
         # Define o botão Voltar
@@ -51,7 +48,6 @@ class Regras:
                 cor_botao = cor_botao_hover
             else:
                 cor_botao = cor_botao_normal
-            #pygame.draw.rect(janela, cor_sombra, (botao_voltar.left + 5, botao_voltar.top + 5, largura_botao, altura_botao))
             pygame.draw.rect(janela, cor_botao, botao_voltar)
             pygame.draw.rect(janela, cor_tracado, botao_voltar, 2)
             texto_voltar = fonte_texto.render('Voltar', True, cor_texto)
