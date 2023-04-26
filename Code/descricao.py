@@ -3,30 +3,38 @@ import os
 
 class Regras:
     def descricao_jogo(janela, largura_janela, altura_janela):
+    #---------------------IMAGENS---------------------
+        # carrega a imagem de fundo
+        imagem_fundo = pygame.image.load(os.path.join('images', 'REGRAS.png'))
+        # redimensiona a imagem para as dimensões da janela
+        imagem_fundo = pygame.transform.smoothscale(imagem_fundo, (largura_janela, altura_janela))
+    #-------------------------------------------------
+        
+    #---------------------CORES/FONTES---------------------
         # Define as variáveis de cor
         cor_texto = '#000000'
         cor_tracado = '#d8b645'
         cor_botao_normal = '#c4c1c1ff'
         cor_botao_hover = '#d8b645'
 
-        # carrega a imagem de fundo
-        imagem_fundo = pygame.image.load(os.path.join('images', 'REGRAS.png'))
-
-        # redimensiona a imagem para as dimensões da janela
-        imagem_fundo = pygame.transform.smoothscale(imagem_fundo, (largura_janela, altura_janela))
-        
         # Define as fontes
         fonte_texto = pygame.font.SysFont('romansd', 25)
+    #------------------------------------------------------
 
+    #---------------------DESIGN-DE-BOTÃO---------------------
         # Define o botão Voltar
         largura_botao = 150
         altura_botao = 50
         x_botao = largura_janela // 1.02 - largura_botao // 1.02
         y_botao = altura_janela - altura_botao - 27
         botao_voltar = pygame.Rect(x_botao, y_botao, largura_botao, altura_botao)
+    #---------------------------------------------------------
 
+
+    #---------------------Variáveis-de-Controlo---------------------
         # Define a flag para verificar se a descrição está em execução
         executando = True
+    #---------------------------------------------------------------
 
         # Loop principal da descrição do jogo
         while executando:
