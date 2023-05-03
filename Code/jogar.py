@@ -126,23 +126,6 @@ class Jogar:
                                     casas_ocupadas[i] = "Nao Ocupado"
                                     casas_ocupadas[i+1] = "Ocupado"
 
-                                    '''
-                                    if (x, y)<posicoes_casas[9]:
-                                        posicoes_casas[i] = (x + 83, y) # METER O VOSSO VALOR
-                                        casas_ocupadas[i] = "Nao Ocupado"
-                                        casas_ocupadas[i+1] = "Ocupado"
-
-                                    elif (x, y)>posicoes_casas[9] and (x, y)<posicoes_casas[19]:
-                                        posicoes_casas[i] = (x - 83, y) # METER O VOSSO VALOR
-                                        casas_ocupadas[i] = "Nao Ocupado"
-                                        casas_ocupadas[i+1] = "Ocupado"
-
-                                    else:
-                                        posicoes_casas[i] = (x, y + 80) # METER O VOSSO VALOR
-                                        casas_ocupadas[i] = "Nao Ocupado"
-                                        casas_ocupadas[i+1] = "Ocupado"
-                                    '''
-
             # Apresenta as peças no ecrã
             for i, img in enumerate(imagens_pecas):
                 if img != None:
