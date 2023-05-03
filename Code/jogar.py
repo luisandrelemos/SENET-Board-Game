@@ -19,33 +19,25 @@ class Jogar:
         janela.blit(imagem_fundo2, (0, 0))
         
         # Carrega as imagens das peças
-        branca1 = pygame.image.load(os.path.join('images', 'Peças', 'WHITE1.png'))
-        branca2 = pygame.image.load(os.path.join('images', 'Peças', 'WHITE2.png'))
-        branca3 = pygame.image.load(os.path.join('images', 'Peças', 'WHITE3.png'))
-        branca4 = pygame.image.load(os.path.join('images', 'Peças', 'WHITE4.png'))
-        branca5 = pygame.image.load(os.path.join('images', 'Peças', 'WHITE5.png'))
-        preta1 = pygame.image.load(os.path.join('images', 'Peças', 'BLACK1.png'))
-        preta2 = pygame.image.load(os.path.join('images', 'Peças', 'BLACK2.png'))
-        preta3 = pygame.image.load(os.path.join('images', 'Peças', 'BLACK3.png'))
-        preta4 = pygame.image.load(os.path.join('images', 'Peças', 'BLACK4.png'))
-        preta5 = pygame.image.load(os.path.join('images', 'Peças', 'BLACK5.png'))
-        
-        # Redimensiona as imagens das peças
-        tamanho_novo = (branca1.get_width() // 1.45, branca1.get_height() // 1.45)
-        branca1 = pygame.transform.smoothscale(branca1, tamanho_novo)
-        branca2 = pygame.transform.smoothscale(branca2, tamanho_novo)
-        branca3 = pygame.transform.smoothscale(branca3, tamanho_novo)
-        branca4 = pygame.transform.smoothscale(branca4, tamanho_novo)
-        branca5 = pygame.transform.smoothscale(branca5, tamanho_novo)
-        preta1 = pygame.transform.smoothscale(preta1, tamanho_novo)
-        preta2 = pygame.transform.smoothscale(preta2, tamanho_novo)
-        preta3 = pygame.transform.smoothscale(preta3, tamanho_novo)
-        preta4 = pygame.transform.smoothscale(preta4, tamanho_novo)
-        preta5 = pygame.transform.smoothscale(preta5, tamanho_novo)
+        pecas = ['WHITE1', 'BLACK1', 'WHITE2', 'BLACK2', 'WHITE3', 'BLACK3', 'WHITE4', 'BLACK4', 'WHITE5', 'BLACK5']
+        imagens_pecas = [pygame.image.load(os.path.join('Images', 'Peças', p + '.png')) for p in pecas]
 
-        posicoes_pecas = [(285, 300), (385, 300), (485, 300), (585, 300), (685, 300), 
-                          (782, 300), (880, 300), (977, 300), (1076, 300), (1174, 300)]
+        # Redimensiona as imagens
+        tamanho_novo = imagens_pecas[0].get_width() // 1.45, imagens_pecas[0].get_height() // 1.45 # METER O VOSSO VALOR
+        imagens_pecas = [pygame.transform.smoothscale(img, tamanho_novo) for img in imagens_pecas]
+        imagens_pecas.extend([None] * 20)
+
+        posicoes_casas = [(285, 300), (385, 300), (485, 300), (585, 300), (685, 300), 
+                          (782, 300), (880, 300), (977, 300), (1076, 300), (1174, 300),
         
+                          (1175, 400), (1076, 400), (977, 400), (880, 400), (782, 400),
+                          (685, 400), (585, 400), (485, 400), (385, 400), (285, 400),
+
+                          (285, 497), (385, 497), (485, 497), (585, 497), (685, 497),
+                          (782, 497), (880, 497), (977, 497), (1076, 497), (1175, 497)]
+        
+        casas_ocupadas = ["Ocupado"] * 10 + ["Nao Ocupado"] * 20
+                    
         # Carregue as imagens dos paus
         pau_preto = pygame.image.load(os.path.join('images', 'Sticks', 'BLACK.png'))
         pau_preto = pygame.transform.smoothscale(pau_preto, (pau_preto.get_width(), pau_preto.get_height())) # METER O VOSSO VALOR
@@ -138,7 +130,7 @@ class Jogar:
                             piscando = False
     #---------------------------------------------------------
 
-    #---------------------EXECUTA-JOGO/VERIFICA-EVENTOS---------------------
+        #---------------------EXECUTA-JOGO/VERIFICA-EVENTOS---------------------
         while executando:
             # Verifica os eventos
             for event in pygame.event.get():
@@ -167,25 +159,14 @@ class Jogar:
                                 elif opcao == 'Menu':
                                     # retorna ao menu principal
                                     return
-                                    
                                 elif opcao == 'Sair':
                                     pygame.quit()
                                     quit()
 
             # Desenha a imagem de fundo
             janela.blit(imagem_fundo, (0, 0))
-            janela.blit(branca1, posicoes_pecas[0])
-            janela.blit(preta1, posicoes_pecas[1])
-            janela.blit(branca2, posicoes_pecas[2])
-            janela.blit(preta2, posicoes_pecas[3])
-            janela.blit(branca3, posicoes_pecas[4])
-            janela.blit(preta3, posicoes_pecas[5])
-            janela.blit(branca4, posicoes_pecas[6])
-            janela.blit(preta4, posicoes_pecas[7])
-            janela.blit(branca5, posicoes_pecas[8])
-            janela.blit(preta5, posicoes_pecas[9])
 
-    #---------------------PAUSA---------------------
+            #---------------------PAUSA---------------------
             if pausado:
                 # Desenha a tela de pausa
                 tela_pausa = pygame.Surface((largura_janela, altura_janela), pygame.SRCALPHA)
@@ -213,7 +194,47 @@ class Jogar:
 
                     janela.blit(texto_opcao, (x_opcao+5, y_opcao+5))
                     y_opcao += 50
-    #-----------------------------------------------
+            #------------------------------------------------------
+
+            #---------------------PEÇAS-----------------------
+            else:
+                for i, posicao in enumerate(posicoes_casas):
+                    if casas_ocupadas[i] == "Ocupado":
+                        # Indica que o rato está sob a peça
+                        if pygame.Rect(posicao, tamanho_novo).collidepoint(pygame.mouse.get_pos()):
+                            peca_hover = pygame.Surface((80,85), pygame.SRCALPHA)
+                            pygame.draw.rect(peca_hover, (0, 0, 0, 55), peca_hover.get_rect(), border_radius=5)
+                            janela.blit(peca_hover, (posicao[0]-5, posicao[1]-6)) # METER O VOSSO VALOR
+
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        quit()
+
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_ESCAPE:
+                            pausado = not pausado
+
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        for i, pos in enumerate(posicoes_casas):
+                            if pygame.mouse.get_pressed():
+                                mouse_pos = pygame.mouse.get_pos()
+                                if pygame.Rect(pos, tamanho_novo).collidepoint(mouse_pos):
+                                    if casas_ocupadas[i+1] == "Ocupado":
+                                        peca_atual = imagens_pecas.pop(i)
+                                        imagens_pecas.insert(i+1, peca_atual)
+                                    else:
+                                        peca_atual = imagens_pecas.pop(i)
+                                        imagens_pecas.insert(i+1, peca_atual)
+                                        casas_ocupadas[i] = "Nao Ocupado"
+                                        casas_ocupadas[i+1] = "Ocupado"
+
+                # Apresenta as peças no ecrã
+                for i, img in enumerate(imagens_pecas):
+                    if img != None:
+                        janela.blit(img, posicoes_casas[i])
+            #-----------------------------------------------
+
             # Atualiza a janela
             pygame.display.update()
-    #------------------------------------------------------
+            #------------------------------------------------------

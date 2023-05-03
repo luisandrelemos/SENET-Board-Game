@@ -4,17 +4,17 @@ import os
 
 class Janela():
     def janela_inicial(janela, largura_janela, altura_janela):
-        #---------------------IMAGENS---------------------
+        #--------------------------IMAGENS--------------------------
         imagem_fundo = pygame.image.load(os.path.join('images', 'FUNDOINICIO.png'))
         imagem_fundo = pygame.transform.scale(imagem_fundo, (largura_janela, altura_janela))
-        #-------------------------------------------------
+        #-----------------------------------------------------------
 
-        #---------------------CORES/FONTES---------------------
+        #------------------------CORES/FONTES-----------------------
         cor_texto = '#ffffff'
         fonte = pygame.font.SysFont('romansd', 40)
-        #------------------------------------------------------
+        #-----------------------------------------------------------
 
-        #---------------------DESIGN-DA-JANELA---------------------
+        #---------------------DESIGN-DA-JANELA----------------------
         mensagem = fonte.render('Clique para começar', True, cor_texto)
         x_mensagem = largura_janela // 2 - mensagem.get_width() // 2
         y_mensagem = altura_janela // 1.4 - mensagem.get_height() // 1.4
@@ -37,3 +37,4 @@ class Janela():
 
                 if evento.type == pygame.MOUSEBUTTONDOWN:
                     piscando = False
+        #-----------------------------------------------------------
