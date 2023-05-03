@@ -18,15 +18,7 @@ class Jogar:
         # Redimensiona as imagens
         tamanho_novo = imagens_pecas[0].get_width() // 1.5, imagens_pecas[0].get_height() // 1.5 # METER O VOSSO VALOR
         imagens_pecas = [pygame.transform.smoothscale(img, tamanho_novo) for img in imagens_pecas]
-        # Depois ajuda a detetar a colisão entre imagens
-        img_colisao = [img.get_rect() for img in imagens_pecas]
-        rect = pygame.Rect(0, 0, 69, 70)
-        img_colisao.extend([rect.copy() for _ in range(20)])
-        img_colisao_centro = [img.get_rect().center for img in imagens_pecas]
-        img_colisao_centro.extend([(34, 35)] * 20)
-        
-        posicoes_iniciais = [(235, 246), (318, 246), (401, 246), (484, 246), (567, 246),  # METER O VOSSO VALOR
-                             (648, 246), (729, 246), (810, 246), (891, 246), (972, 246)]
+        imagens_pecas.extend([None] * 20)
         
         posicoes_casas = [(235, 246), (318, 246), (401, 246), (484, 246), (567, 246),  # METER O VOSSO VALOR
                           (648, 246), (729, 246), (810, 246), (891, 246), (972, 246),
@@ -107,13 +99,13 @@ class Jogar:
         #-------------------------------------------------
 
         #---------------------PEÇAS---------------------
-            for i, hover in enumerate(posicoes_casas):
+            for i, posicao in enumerate(posicoes_casas):
                 if casas_ocupadas[i] == "Ocupado":
                     # Indica que o rato está sob a peça
-                    if pygame.Rect(hover, tamanho_novo).collidepoint(pygame.mouse.get_pos()):
+                    if pygame.Rect(posicao, tamanho_novo).collidepoint(pygame.mouse.get_pos()):
                         peca_hover = pygame.Surface(tamanho_novo, pygame.SRCALPHA)
                         pygame.draw.rect(peca_hover, (0, 0, 0, 55), peca_hover.get_rect(), border_radius=5)
-                        janela.blit(peca_hover, (hover[0]-1, hover[1]-1)) # METER O VOSSO VALOR
+                        janela.blit(peca_hover, (posicao[0]-1, posicao[1]-1)) # METER O VOSSO VALOR
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -122,31 +114,39 @@ class Jogar:
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     for i, pos in enumerate(posicoes_casas):
-                        mouse_pos = pygame.mouse.get_pos()
                         if pygame.mouse.get_pressed():
+                            mouse_pos = pygame.mouse.get_pos()
                             if pygame.Rect(pos, tamanho_novo).collidepoint(mouse_pos):
                                 if casas_ocupadas[i+1] == "Ocupado":
                                     peca_atual = imagens_pecas.pop(i)
                                     imagens_pecas.insert(i+1, peca_atual)
                                 else:
-                                    if i<9 or i>19:
-                                        posicoes_casas[i] = (pos[0] + 83, pos[1]) # METER O VOSSO VALOR
+                                    peca_atual = imagens_pecas.pop(i)
+                                    imagens_pecas.insert(i+1, peca_atual)
+                                    casas_ocupadas[i] = "Nao Ocupado"
+                                    casas_ocupadas[i+1] = "Ocupado"
+
+                                    '''
+                                    if (x, y)<posicoes_casas[9]:
+                                        posicoes_casas[i] = (x + 83, y) # METER O VOSSO VALOR
                                         casas_ocupadas[i] = "Nao Ocupado"
                                         casas_ocupadas[i+1] = "Ocupado"
-                                        #print(posicoes_casas)
-                                        #print(casas_ocupadas)
-                                    elif i==9 or i==19:
-                                        posicoes_casas[i] = (pos[0], pos[1] + 80) # METER O VOSSO VALOR
+
+                                    elif (x, y)>posicoes_casas[9] and (x, y)<posicoes_casas[19]:
+                                        posicoes_casas[i] = (x - 83, y) # METER O VOSSO VALOR
                                         casas_ocupadas[i] = "Nao Ocupado"
                                         casas_ocupadas[i+1] = "Ocupado"
+
                                     else:
-                                        posicoes_casas[i] = (pos[0] - 83, pos[1]) # METER O VOSSO VALOR
+                                        posicoes_casas[i] = (x, y + 80) # METER O VOSSO VALOR
                                         casas_ocupadas[i] = "Nao Ocupado"
                                         casas_ocupadas[i+1] = "Ocupado"
- 
+                                    '''
+
             # Apresenta as peças no ecrã
             for i, img in enumerate(imagens_pecas):
-                janela.blit(img, posicoes_casas[i])
+                if img != None:
+                    janela.blit(img, posicoes_casas[i])
         #-----------------------------------------------
             # Atualiza a janela
             pygame.display.update()
