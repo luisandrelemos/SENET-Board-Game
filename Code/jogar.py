@@ -117,10 +117,13 @@ class Jogar:
                         if pygame.mouse.get_pressed():
                             mouse_pos = pygame.mouse.get_pos()
                             if pygame.Rect(pos, tamanho_novo).collidepoint(mouse_pos):
+                                # Controla o movimento das peças
                                 if casas_ocupadas[i] == "Ocupado":
+                                    # Faz a troca de peças em casas consecutivas
                                     if casas_ocupadas[i+1] == "Ocupado":
                                         peca_atual = imagens_pecas.pop(i)
                                         imagens_pecas.insert(i+1, peca_atual)
+                                    # Faz as peças andar as casas
                                     else:
                                         peca_atual = imagens_pecas.pop(i)
                                         imagens_pecas.insert(i+1, peca_atual)
