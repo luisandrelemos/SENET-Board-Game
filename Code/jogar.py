@@ -117,14 +117,15 @@ class Jogar:
                         if pygame.mouse.get_pressed():
                             mouse_pos = pygame.mouse.get_pos()
                             if pygame.Rect(pos, tamanho_novo).collidepoint(mouse_pos):
-                                if casas_ocupadas[i+1] == "Ocupado":
-                                    peca_atual = imagens_pecas.pop(i)
-                                    imagens_pecas.insert(i+1, peca_atual)
-                                else:
-                                    peca_atual = imagens_pecas.pop(i)
-                                    imagens_pecas.insert(i+1, peca_atual)
-                                    casas_ocupadas[i] = "Nao Ocupado"
-                                    casas_ocupadas[i+1] = "Ocupado"
+                                if casas_ocupadas[i] == "Ocupado":
+                                    if casas_ocupadas[i+1] == "Ocupado":
+                                        peca_atual = imagens_pecas.pop(i)
+                                        imagens_pecas.insert(i+1, peca_atual)
+                                    else:
+                                        peca_atual = imagens_pecas.pop(i)
+                                        imagens_pecas.insert(i+1, peca_atual)
+                                        casas_ocupadas[i] = "Nao Ocupado"
+                                        casas_ocupadas[i+1] = "Ocupado"
 
             # Apresenta as peças no ecrã
             for i, img in enumerate(imagens_pecas):
