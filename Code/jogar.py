@@ -56,9 +56,9 @@ class Jogar:
 
         # Define as fontes
         fonte = pygame.font.SysFont('romansd', 40)
-        #fonte_titulo = pygame.font.SysFont('romansd', 40) #substituída para 'fonte' pois são iguais
+        fonte_negrito = pygame.font.SysFont('romansd', 40, bold=True)
         fonte_texto = pygame.font.SysFont('romansd', 25)
-    #------------------------------------------------------
+    #--------------------------------------------------------------
 
     #---------------------FUNÇÕES-PARA-OS-PAUS---------------------
         # Função para escolher aleatoriamente as cores das paus
@@ -92,6 +92,7 @@ class Jogar:
     #---------------------Variáveis-de-Controlo---------------------
         # Controla o piscar da mensagem
         piscando = True
+        tempo_piscar = 1
         # Define a flag para verificar se a descrição está em execução
         executando = True
         # Define a variável para controlar se o jogo está pausado
@@ -99,35 +100,41 @@ class Jogar:
     #---------------------------------------------------------------
 
     #---------------------TELA-NOVA-RONDA---------------------
-        while piscando:
-            for i in range (1, 6):
-                #Criar texto na tela de nova ronda
-                mensagem = fonte.render('Clique para rolar', True, cor_texto2)
-                ronda = fonte.render(f'Ronda {i}',True, cor_texto2)
-                jogador = fonte.render('Jogador 1',True,cor_texto2)
-                x_mensagem = largura_janela // 2 - mensagem.get_width() // 2
-                y_mensagem = altura_janela // 1.5 - mensagem.get_height() // 1.5
-                x_ronda = largura_janela // 3.2 - ronda.get_width() // 3.2
-                y_ronda = altura_janela //7 - ronda.get_height() //7
-                x_jogador = largura_janela // 1.5 - jogador.get_width() // 1.5
-                y_jogador = altura_janela //7 - jogador.get_height() // 7
-                pygame.display.update()
-                #carregar texto na tela de nova ronda
-                janela.blit(jogador,(x_jogador, y_jogador))
-            
-                while piscando:
-                    janela.blit(ronda,(x_ronda, y_ronda))
-            
-                    janela.blit(mensagem, (x_mensagem, y_mensagem))
-                    pygame.display.update()
-                    
-                    for evento in pygame.event.get():
-                        if evento.type == pygame.QUIT:
-                            pygame.quit()
-                            quit()
+        for i in range(1, 6):
+            # Criar texto na tela de nova ronda
+            mensagem = fonte_negrito.render('Clique para rolar', True, cor_texto2)
+            ronda = fonte_negrito.render(f'Ronda {i}',True, cor_texto2)
+            jogador = fonte_negrito.render('Jogador 1',True,cor_texto2)
+            x_mensagem = largura_janela // 2 - mensagem.get_width() // 2
+            y_mensagem = altura_janela // 1.5 - mensagem.get_height() // 1.5
+            x_ronda = largura_janela // 3.2 - ronda.get_width() // 3.2
+            y_ronda = altura_janela //19 - ronda.get_height() //19
+            x_jogador = largura_janela // 1.5 - jogador.get_width() // 1.5
+            y_jogador = altura_janela //19 - jogador.get_height() // 19
+            pygame.display.update()
 
-                        if evento.type == pygame.MOUSEBUTTONDOWN:
-                            piscando = False
+            piscando = True
+        
+        # Loop que gere os textos e o piscar
+        while piscando:
+            janela.blit(imagem_fundo2, (0, 0))
+            janela.blit(jogador,(x_jogador, y_jogador))
+            janela.blit(ronda,(x_ronda, y_ronda))
+
+            if time.time() % tempo_piscar < tempo_piscar / 2:
+                janela.blit(mensagem, (x_mensagem, y_mensagem))
+
+            pygame.display.update()
+
+            # Este loop verifica todos os eventos do Pygame que ocorrem durante a animação.
+            for evento in pygame.event.get():
+                if evento.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
+
+                if evento.type == pygame.MOUSEBUTTONDOWN:
+                    piscando = False
+                    break
     #---------------------------------------------------------
 
         #---------------------EXECUTA-JOGO/VERIFICA-EVENTOS---------------------
@@ -220,14 +227,15 @@ class Jogar:
                             if pygame.mouse.get_pressed():
                                 mouse_pos = pygame.mouse.get_pos()
                                 if pygame.Rect(pos, tamanho_novo).collidepoint(mouse_pos):
-                                    if casas_ocupadas[i+1] == "Ocupado":
-                                        peca_atual = imagens_pecas.pop(i)
-                                        imagens_pecas.insert(i+1, peca_atual)
-                                    else:
-                                        peca_atual = imagens_pecas.pop(i)
-                                        imagens_pecas.insert(i+1, peca_atual)
-                                        casas_ocupadas[i] = "Nao Ocupado"
-                                        casas_ocupadas[i+1] = "Ocupado"
+                                    if casas_ocupadas[i] == "Ocupado":
+                                        if casas_ocupadas[i+1] == "Ocupado":
+                                            peca_atual = imagens_pecas.pop(i)
+                                            imagens_pecas.insert(i+1, peca_atual)
+                                        else:
+                                            peca_atual = imagens_pecas.pop(i)
+                                            imagens_pecas.insert(i+1, peca_atual)
+                                            casas_ocupadas[i] = "Nao Ocupado"
+                                            casas_ocupadas[i+1] = "Ocupado"
 
                 # Apresenta as peças no ecrã
                 for i, img in enumerate(imagens_pecas):
