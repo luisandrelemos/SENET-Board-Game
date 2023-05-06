@@ -23,7 +23,7 @@ class Jogar:
         imagens_pecas = [pygame.image.load(os.path.join('Images', 'Peças', p + '.png')) for p in pecas]
 
         # Redimensiona as imagens
-        tamanho_novo = imagens_pecas[0].get_width() // 1.45, imagens_pecas[0].get_height() // 1.45 # METER O VOSSO VALOR
+        tamanho_novo = imagens_pecas[0].get_width() // 1.45, imagens_pecas[0].get_height() // 1.45
         imagens_pecas = [pygame.transform.smoothscale(img, tamanho_novo) for img in imagens_pecas]
         imagens_pecas.extend([None] * 20)
 
@@ -40,9 +40,9 @@ class Jogar:
                     
         # Carregue as imagens dos paus
         pau_preto = pygame.image.load(os.path.join('images', 'Sticks', 'BLACK.png'))
-        pau_preto = pygame.transform.smoothscale(pau_preto, (pau_preto.get_width(), pau_preto.get_height())) # METER O VOSSO VALOR
+        pau_preto = pygame.transform.smoothscale(pau_preto, (pau_preto.get_width(), pau_preto.get_height()))
         pau_branco = pygame.image.load(os.path.join('images', 'Sticks', 'WHITE.png'))
-        pau_branco = pygame.transform.smoothscale(pau_branco, (pau_branco.get_width(), pau_branco.get_height())) # METER O VOSSO VALOR
+        pau_branco = pygame.transform.smoothscale(pau_branco, (pau_branco.get_width(), pau_branco.get_height()))
     #-------------------------------------------------
 
     #---------------------CORES/FONTES---------------------
@@ -82,11 +82,11 @@ class Jogar:
         
         # Função para desenhar as paus na tela
         def desenhar_paus(paus):
-            pos_x = 250 # METER O VOSSO VALOR
-            pos_y = 660 # METER O VOSSO VALOR
-            for cor, img_pau in paus:
+            pos_x = 250
+            pos_y = 660
+            for _, img_pau in paus:
                 imagem_fundo.blit(img_pau, (pos_x, pos_y))
-                pos_x += 70 # METER O VOSSO VALOR
+                pos_x += 70
 
         # Escolhe a cor dos paus
         paus, num_paus = escolher_cores()
@@ -145,7 +145,7 @@ class Jogar:
 
     #---------------------EXECUTA-JOGO---------------------
         while executando:
-            # Verifica os eventos
+        #---------------------VERIFICA-EVENTOS-PARA-A-TELA DE-PAUSA---------------------
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -175,15 +175,18 @@ class Jogar:
                                 elif opcao == 'Sair':
                                     pygame.quit()
                                     quit()
+        #-------------------------------------------------------------------------------
 
+        #---------------------BLIT-DE-IMAGENS---------------------
             # Desenha a imagem de fundo
             janela.blit(imagem_fundo, (0, 0))
             # Apresenta as peças no ecrã
             for i, img in enumerate(imagens_pecas):
                 if img != None:
                     janela.blit(img, posicoes_casas[i])
+        #---------------------------------------------------------
 
- #---------------------PAUSA---------------------
+        #---------------------PAUSA---------------------
             if pausado:
                 # Desenha a tela de pausa
                 tela_pausa = pygame.Surface((largura_janela, altura_janela), pygame.SRCALPHA)
@@ -221,7 +224,7 @@ class Jogar:
                         if pygame.Rect(posicao, tamanho_novo).collidepoint(pygame.mouse.get_pos()):
                             peca_hover = pygame.Surface((80,85), pygame.SRCALPHA)
                             pygame.draw.rect(peca_hover, (0, 0, 0, 55), peca_hover.get_rect(), border_radius=5)
-                            janela.blit(peca_hover, (posicao[0]-5, posicao[1]-6)) # METER O VOSSO VALOR
+                            janela.blit(peca_hover, (posicao[0]-5, posicao[1]-6))
 
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
@@ -245,8 +248,7 @@ class Jogar:
                                         # Faz as peças andar casas
                                         else:
                                             imagens_pecas[i], imagens_pecas[i + num_paus] = imagens_pecas[i + num_paus], imagens_pecas[i]
-                                            casas_ocupadas[i], casas_ocupadas[i + num_paus] = "Nao Ocupado", "Ocupado" #Muda as o index as casas ocupadas
-
+                                            casas_ocupadas[i], casas_ocupadas[i + num_paus] = "Nao Ocupado", "Ocupado" #Muda o index as casas ocupadas
         #-----------------------------------------------
             # Atualiza a janela
             pygame.display.update()
