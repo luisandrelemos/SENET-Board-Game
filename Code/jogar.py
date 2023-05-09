@@ -40,9 +40,12 @@ class Jogar:
                     
         # Carregue as imagens dos paus
         pau_preto = pygame.image.load(os.path.join('images', 'Sticks', 'BLACK.png'))
-        pau_preto = pygame.transform.smoothscale(pau_preto, (pau_preto.get_width(), pau_preto.get_height()))
         pau_branco = pygame.image.load(os.path.join('images', 'Sticks', 'WHITE.png'))
-        pau_branco = pygame.transform.smoothscale(pau_branco, (pau_branco.get_width(), pau_branco.get_height()))
+        pau_tamanho = pau_preto.get_width(), pau_preto.get_height()
+        pau_preto = pygame.transform.smoothscale(pau_preto, pau_tamanho)
+        pau_branco = pygame.transform.smoothscale(pau_branco, pau_tamanho)
+
+        tamanho_paus = pau_tamanho[0]*8, pau_tamanho[1]*8
     #-------------------------------------------------
 
     #---------------------CORES/FONTES---------------------
@@ -82,7 +85,7 @@ class Jogar:
         
         # Função para desenhar as paus na tela
         def desenhar_paus(paus):
-            pos_x = 250
+            pos_x = 645
             pos_y = 660
             for _, img_pau in paus:
                 imagem_fundo.blit(img_pau, (pos_x, pos_y))
@@ -216,8 +219,9 @@ class Jogar:
                     y_opcao += 50
         #------------------------------------------------------
 
-        #---------------------PEÇAS-----------------------
+        #---------------------PEÇAS---------------------
             else:
+            #---------------------PAUS-E-HOVERS-----------------------
                 for i, posicao in enumerate(posicoes_casas):
                     if casas_ocupadas[i] == "Ocupado":
                         # Indica que o rato está sob a peça
@@ -225,7 +229,47 @@ class Jogar:
                             peca_hover = pygame.Surface((80,85), pygame.SRCALPHA)
                             pygame.draw.rect(peca_hover, (0, 0, 0, 55), peca_hover.get_rect(), border_radius=5)
                             janela.blit(peca_hover, (posicao[0]-5, posicao[1]-6))
+                            
+                if pygame.Rect((645, 660), tamanho_paus). collidepoint(pygame.mouse.get_pos()):
+                    paus_hover = pygame.Surface((250, 150), pygame.SRCALPHA)
+                    pygame.draw.rect(paus_hover, (255, 255, 255, 55), paus_hover.get_rect(), border_radius=5)
+                    janela.blit(paus_hover, (640, 655))
+                    if pygame.mouse.get_pressed()[0]:
+                        # Adiciona a funcionalidade quando o hover for clicado
+                        def escolher_cores():
+                            cores = ["WHITE", "BLACK"]
+                            paus = []
+                            num_paus = 0
+                            for _ in range(4):
+                                cor = random.choice(cores)
+                                if cor == "WHITE":
+                                    img_pau = pau_branco
+                                    num_paus +=1
+                                else:
+                                    img_pau = pau_preto
+                                paus.append((cor, img_pau))
 
+                            # define que o número de casas a andar é 5 se houver 4 paus pretos
+                            if num_paus==0:
+                                num_paus=5
+                            return paus, num_paus
+                        
+                        # Função para desenhar as paus na tela
+                        def desenhar_paus(paus):
+                            pos_x = 645
+                            pos_y = 660
+                            for _, img_pau in paus:
+                                imagem_fundo.blit(img_pau, (pos_x, pos_y))
+                                pos_x += 70
+
+                        # Escolhe a cor dos paus
+                        paus, num_paus = escolher_cores()
+
+                        # Desenha as paus na tela
+                        desenhar_paus(paus)   
+            #------------------------------------------------
+
+            #---------------------MOVIMENTO---------------------
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         pygame.quit()
@@ -236,20 +280,20 @@ class Jogar:
                             pausado = not pausado
 
                     if event.type == pygame.MOUSEBUTTONDOWN:
+                        mouse_pos = pygame.mouse.get_pos()
                         for i, pos in enumerate(posicoes_casas):
-                            if pygame.mouse.get_pressed():
-                                mouse_pos = pygame.mouse.get_pos()
-                                if pygame.Rect(pos, tamanho_novo).collidepoint(mouse_pos):
-                                    # Controla o movimento das peças
-                                    if casas_ocupadas[i] == "Ocupado":
-                                        # Faz a troca de peças
-                                        if casas_ocupadas[i + num_paus] == "Ocupado":
-                                            imagens_pecas[i], imagens_pecas[i + num_paus] = imagens_pecas[i + num_paus], imagens_pecas[i]
-                                        # Faz as peças andar casas
-                                        else:
-                                            imagens_pecas[i], imagens_pecas[i + num_paus] = imagens_pecas[i + num_paus], imagens_pecas[i]
-                                            casas_ocupadas[i], casas_ocupadas[i + num_paus] = "Nao Ocupado", "Ocupado" #Muda o index as casas ocupadas
-        #-----------------------------------------------
+                            if pygame.Rect(pos, tamanho_novo).collidepoint(mouse_pos):
+                                # Controla o movimento das peças
+                                if casas_ocupadas[i] == "Ocupado":
+                                    # Faz a troca de peças
+                                    if casas_ocupadas[i + num_paus] == "Ocupado":
+                                        imagens_pecas[i], imagens_pecas[i + num_paus] = imagens_pecas[i + num_paus], imagens_pecas[i]
+                                    # Faz as peças andar casas
+                                    else:
+                                        imagens_pecas[i], imagens_pecas[i + num_paus] = imagens_pecas[i + num_paus], imagens_pecas[i]
+                                        casas_ocupadas[i], casas_ocupadas[i + num_paus] = "Nao Ocupado", "Ocupado" #Muda o index as casas ocupadas
+            #---------------------------------------------------
+        #--------------------------------------------------
             # Atualiza a janela
             pygame.display.update()
     #------------------------------------------------------

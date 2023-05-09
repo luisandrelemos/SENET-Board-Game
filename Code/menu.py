@@ -7,14 +7,14 @@ from quit import Sair
 
 class Menu:
     def menu_principal(janela, largura_janela, altura_janela):
-    #---------------------IMAGENS---------------------
+    #-------------------------IMAGENS-----------------------------
         # carrega a imagem de fundo
         imagem_fundo = pygame.image.load(os.path.join('images', 'FUNDO.png'))
         # redimensiona a imagem para as dimensões da janela
         imagem_fundo = pygame.transform.smoothscale(imagem_fundo, (largura_janela, altura_janela))
-    #-------------------------------------------------
+    #-------------------------------------------------------------
 
-    #---------------------CORES/FONTES---------------------
+    #-----------------------CORES/FONTES--------------------------
         # define as variáveis de cor
         cor_texto = '#000000'
         cor_botao_normal = '#c4c1c1ff'
@@ -24,9 +24,9 @@ class Menu:
 
         # define as fontes
         fonte_opcoes = pygame.font.SysFont('romansd', 30)
-    #------------------------------------------------------
+    #-------------------------------------------------------------
 
-    #---------------------DESIGN-DO-MENU---------------------
+    #------------------------DESIGN-DO-MENU-----------------------
         # define as opções do menu
         opcoes = [
             {'texto': 'Jogar Partida', 'funcao': lambda: submenu_jogar_partida(janela, largura_janela, altura_janela)},
@@ -47,12 +47,12 @@ class Menu:
             y = y_botao + i * (altura_botao + margem_botao)
             botao = pygame.Rect(x, y, largura_botao, altura_botao)
             botoes.append({'retangulo': botao, 'texto': opcao['texto'], 'cor': cor_botao_normal, 'funcao': opcao['funcao']})
-    #--------------------------------------------------------
+    #-------------------------------------------------------------
 
-    #---------------------Variáveis-de-Controlo---------------------
+    #--------------------Variáveis-de-Controlo--------------------
         # define a flag para verificar se o menu está em execução
         executando = True
-    #---------------------------------------------------------------
+    #-------------------------------------------------------------
 
         # loop principal do menu
         while executando:
@@ -195,3 +195,4 @@ class Menu:
 
                     # atualiza a janela
                     pygame.display.update()
+            #------------------------------------------------------------
