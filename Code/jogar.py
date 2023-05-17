@@ -9,13 +9,14 @@ class Jogar:
         # Carrega a imagem de fundo de jogo
         imagem_fundo = pygame.image.load(os.path.join('images', 'JOGO.png'))
         # Redimensiona a imagem
+        
         imagem_fundo = pygame.transform.smoothscale(imagem_fundo, (largura_janela, altura_janela))
 
-        # Cria a imagem de fundo da nova ronda
+        # Cria a imagem de fundo da tela dos jogadores
         imagem_fundo2 = pygame.image.load(os.path.join('images', 'FUNDOJOGO.png'))
         # Redimensiona a imagem
         imagem_fundo2 = pygame.transform.smoothscale(imagem_fundo2, (largura_janela, altura_janela))
-        # Desenha a imagem de fundo da nova ronda
+        # Desenha a imagem de fundo na tela de jogadores
         janela.blit(imagem_fundo2, (0, 0))
 
         # Carrega as imagens das peças
@@ -36,7 +37,7 @@ class Jogar:
                           (285, 497), (385, 497), (485, 497), (585, 497), (685, 497),
                           (782, 497), (880, 497), (977, 497), (1076, 497), (1175, 497)]
         
-        casas_ocupadas = ["Ocupado"] * 10 + ["Nao Ocupado"] * 20
+        casas_ocupadas = ["Branco", "Preto"] * 5 + ["Nao Ocupado"] * 20
 
         # Carregue as imagens dos paus
         pau_preto = pygame.image.load(os.path.join('images', 'Sticks', 'BLACK.png'))
@@ -57,20 +58,43 @@ class Jogar:
         cor_botao_hover = '#d8b645'
         cor_texto2 = '#ffffff'
 
+        #Cor do retangulo de input
+        box_passivo = (89, 89, 89)
+        box_ativo = (0, 0, 0)
+        box_cor = box_passivo
+
         # Define as fontes
-        fonte = pygame.font.SysFont('romansd', 40)
-        fonte_negrito = pygame.font.SysFont('romansd', 40, bold=True)
-        fonte_texto = pygame.font.SysFont('romansd', 25)
+        fonte3_path = os.path.join('Fonts','roman_sd', 'Roman SD.ttf')
+        fonte = pygame.font.Font(fonte3_path, 40)
+
+        fonte_path = os.path.join('Fonts','roman_sd', 'Roman SD.ttf')
+        fonte_texto = pygame.font.Font(fonte_path, 25)
     #--------------------------------------------------------------
 
+    #---------------------VARIÁVEIS-PARA-JOGADOR---------------------
+        # Vai guardar os nomes
+        jogadores = []
+        jogador_coords = [(largura_janela // 10, altura_janela // 3.6), (largura_janela // 1.46, altura_janela // 3.6)]
+        nome = ''
+
+        # Variáveis para a boxde nomes
+        box_coords = [(250, 235), (1120, 235)] # Coordenadas do retângulo
+        box_m = (140, 32) # Medidas do retângulo
+    #----------------------------------------------------------
+
     #---------------------Variáveis-de-Controlo---------------------
-        # Controla o piscar da mensagem
-        piscando = True
-        tempo_piscar = 1
-        # Define a flag para verificar se a descrição está em execução
-        executando = True
-        # Define a variável para controlar se o jogo está pausado
-        pausado = False
+        # Controlam telas
+        players = True # Tela dos Nomes
+        rolar = True # Tela de decisão de ordem
+        executando = True # Tela de Jogo
+        pausado = False # Tela de Pausa
+
+        # Controla a cor da caixa de input do nome
+        box_ativado = False
+        # Usada para controlar as coordenadas da box
+        enter = 0
+        # Verifica o jogador atual
+        jogador_atual = 1
         # Verifica se o jogador já lançou
         lancamento = False
     #---------------------------------------------------------------
@@ -110,43 +134,67 @@ class Jogar:
         desenhar_paus(paus)
     #--------------------------------------------------------------
 
-    #---------------------TELA-NOVA-RONDA---------------------
-        for i in range(1, 6):
-            # Criar texto na tela de nova ronda
-            mensagem = fonte_negrito.render('Clique para rolar', True, cor_texto2)
-            ronda = fonte_negrito.render(f'Ronda {i}',True, cor_texto2)
-            jogador = fonte_negrito.render('Jogador 1',True,cor_texto2)
-            x_mensagem = largura_janela // 2 - mensagem.get_width() // 2
-            y_mensagem = altura_janela // 1.5 - mensagem.get_height() // 1.5
-            x_ronda = largura_janela // 3.2 - ronda.get_width() // 3.2
-            y_ronda = altura_janela //19 - ronda.get_height() //19
-            x_jogador = largura_janela // 1.5 - jogador.get_width() // 1.5
-            y_jogador = altura_janela //19 - jogador.get_height() // 19
-            pygame.display.update()
-
-            piscando = True
-
-        # Loop que gere os textos e o piscar
-        while piscando:
-            janela.blit(imagem_fundo2, (0, 0))
-            janela.blit(jogador,(x_jogador, y_jogador))
-            janela.blit(ronda,(x_ronda, y_ronda))
-
-            if time.time() % tempo_piscar < tempo_piscar / 2:
-                janela.blit(mensagem, (x_mensagem, y_mensagem))
-
-            pygame.display.update()
-
-            # Este loop verifica todos os eventos do Pygame que ocorrem durante a animação.
-            for evento in pygame.event.get():
-                if evento.type == pygame.QUIT:
+    #---------------------TELA-JOGADORES---------------------
+        while players:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
                     pygame.quit()
                     quit()
 
-                if evento.type == pygame.MOUSEBUTTONDOWN:
-                    piscando = False
-                    break
-    #---------------------------------------------------------
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if input_box.collidepoint(pygame.mouse.get_pos()):
+                        box_ativado = True # Ativa a box
+
+                if box_ativado:
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_BACKSPACE:
+                            nome = nome[:-1] # Retira o últmo item da lista
+
+                        if event.key == pygame.K_RETURN:
+                            background_portion = imagem_fundo2.subsurface(input_box) # Obtém a porção coberta pela box
+                            janela.blit(background_portion, input_box) # Tapa a box com essa porção
+
+                            janela.blit(jogador_nome, jogador_coords[jogador_atual-1]) # Mete os nomes dos jogadores em posções diferentes
+                            jogadores.append(nome) # Guarda os nomes numa variável
+
+                            box_ativado = False # Desativa a box
+                            nome = '' # limpa o texto na box
+                            jogador_atual += 1 # Muda para o próximo jogador
+                            if enter<1:
+                                enter += 1 # Muda para as próximas coordenadas da input_box
+
+                        tecla = event.unicode
+                        if tecla.isalpha() or tecla.isdigit(): # Verifica se o caracter é alfanumérico
+                            nome += tecla # Adiciona o caracter ao nome
+
+        # Troca a cor da box dependendo se está "ativada" ou não
+            if box_ativado:
+                box_cor = box_ativo
+            else:
+                box_cor = box_passivo
+
+            # Fecha a tela após o limite de jogadores ser atingido
+            if jogador_atual==3:
+                pygame.display.flip()
+                pygame.time.delay(1500) # Pausa por 3000 milissegundos (3 segundos)
+                players = False
+
+            # Cria a box do nome
+            input_box = pygame.Rect(box_coords[enter], box_m)
+            pygame.draw.rect(janela, box_cor, input_box)
+
+            # Apresenta o texto escrito na tela
+            nome_texto = fonte_texto.render(nome, True, cor_texto2)
+            janela.blit(nome_texto, (input_box.x+5, input_box.y+5))
+
+            # Aumenta o retângulo conforme o texto
+            input_box.w = max(140, nome_texto.get_width()+10)
+
+            # Apresenta o nome do jogador
+            jogador_nome = fonte_texto.render(f'Jogador {jogador_atual}: {nome}', True, cor_texto2)
+
+            pygame.display.flip()
+    #------------------------------------------------------
 
     #---------------------EXECUTA-JOGO---------------------
         while executando:
@@ -223,9 +271,9 @@ class Jogar:
 
         #---------------------PEÇAS---------------------
             else:
-            #---------------------HOVERS---------------------
+            #---------------------HOVERS-E-PAUS---------------------
                 for i, posicao in enumerate(posicoes_casas):
-                    if casas_ocupadas[i] == "Ocupado":
+                    if casas_ocupadas[i] in ["Branco", "Preto"]:
                         # Indica que o rato está sob a peça
                         if pygame.Rect(posicao, tamanho_novo).collidepoint(pygame.mouse.get_pos()):
                             peca_hover = pygame.Surface((80,85), pygame.SRCALPHA)
@@ -263,7 +311,7 @@ class Jogar:
                             pos_x += 70
                         
                         lancamento=True
-            #------------------------------------------------
+            #-------------------------------------------------------
 
             #---------------------MOVIMENTO---------------------
                 for event in pygame.event.get():
@@ -281,41 +329,50 @@ class Jogar:
                             next_pos = i + num_paus
                             if pygame.Rect(pos, tamanho_novo).collidepoint(mouse_pos):
                                 # Controla o movimento das peças
-                                if casas_ocupadas[i] == "Ocupado" and lancamento==True:
+                                if casas_ocupadas[i] in ["Branco", "Preto"] and lancamento==True: # Verifica qual a cor da peça clicada e se o utilizador já lançou
                                     lancamento=False
+                                    next_casa = casas_ocupadas[next_pos]
+
                                     if next_pos<=25:
-                                        # Faz a troca de peças
-                                        if casas_ocupadas[next_pos] == "Ocupado":
-                                            imagens_pecas[i], imagens_pecas[next_pos] = imagens_pecas[next_pos], imagens_pecas[i] # Muda a peça de index para depois no blit ser posta na posição correta
                                         # Faz as peças andar casas
-                                        else:
-                                            imagens_pecas[i], imagens_pecas[next_pos] = imagens_pecas[next_pos], imagens_pecas[i]
-                                            casas_ocupadas[i], casas_ocupadas[next_pos] = "Nao Ocupado", "Ocupado" # Muda o index das casas ocupadas
+                                        if casas_ocupadas[i] != casas_ocupadas[next_pos]:
+                                            imagens_pecas[i], imagens_pecas[next_pos] = imagens_pecas[next_pos], imagens_pecas[i] # Muda a peça de index para depois no blit ser posta na posição correta
+
+                                            # Muda o index das casas ocupadas
+                                            casas_ocupadas[next_pos] = "Preto" if casas_ocupadas[i] == "Preto" else "Branco"
+                                            casas_ocupadas[i] = "Nao Ocupado" if next_casa == "Nao Ocupado" else "Preto" if next_casa == "Preto" else "Branco"
 
                                     # Casas Especiais
                                     if i>=25:
                                         # Verifica se a peça vai para a casa 27
                                         if next_pos == 26:
                                             imagens_pecas[i], imagens_pecas[14] = imagens_pecas[14], imagens_pecas[i] # Transporta a peça para a casa 15
-                                            casas_ocupadas[i], casas_ocupadas[14] = "Nao Ocupado", "Ocupado"
+
+                                            casas_ocupadas[14] = "Preto" if casas_ocupadas[i] == "Preto" else "Branco"
+                                            casas_ocupadas[i] = "Nao Ocupado" if next_casa == "Nao Ocupado" else "Preto" if next_casa == "Preto" else "Branco"
 
                                         # Verifica se a peça vai para a casa 28
                                         if i==27:
                                             if num_paus==3: # Condição que aoenas permite mover se se sair 3
                                                 imagens_pecas[i], imagens_pecas[next_pos] = imagens_pecas[next_pos], imagens_pecas[i]
-                                                casas_ocupadas[i], casas_ocupadas[next_pos] = "Nao Ocupado", "Ocupado"
+
+                                                casas_ocupadas[next_pos] = "Preto" if casas_ocupadas[i] == "Preto" else "Branco"
+                                                casas_ocupadas[i] = "Nao Ocupado" if next_casa == "Nao Ocupado" else "Preto" if next_casa == "Preto" else "Branco"
 
                                         # Verifica se a peça vai para a casa 29
                                         elif i==28:
                                             if num_paus==2: # Condição que aoenas permite mover se se sair 2
                                                 imagens_pecas[i], imagens_pecas[next_pos] = imagens_pecas[next_pos], imagens_pecas[i]
-                                                casas_ocupadas[i], casas_ocupadas[next_pos] = "Nao Ocupado", "Ocupado"
+                                                
+                                                casas_ocupadas[next_pos] = "Preto" if casas_ocupadas[i] == "Preto" else "Branco"
+                                                casas_ocupadas[i] = "Nao Ocupado" if next_casa == "Nao Ocupado" else "Preto" if next_casa == "Preto" else "Branco"
 
                                         else:
                                             imagens_pecas[i], imagens_pecas[next_pos] = imagens_pecas[next_pos], imagens_pecas[i]
-                                            casas_ocupadas[i], casas_ocupadas[next_pos] = "Nao Ocupado", "Ocupado"
+                                            
+                                            casas_ocupadas[next_pos] = "Preto" if casas_ocupadas[i] == "Preto" else "Branco"
+                                            casas_ocupadas[i] = "Nao Ocupado" if next_casa == "Nao Ocupado" else "Preto" if next_casa == "Preto" else "Branco"
             #---------------------------------------------------
         #-----------------------------------------------
-            # Atualiza a janela
-            pygame.display.update()
+            pygame.display.flip() # atualiza apenas um porção do ecrã (assim não consome tanto)
     #------------------------------------------------------

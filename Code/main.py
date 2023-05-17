@@ -15,6 +15,6 @@ Janela.janela_inicial(janela, largura_janela, altura_janela)
     
 # cria a janela
 janela = pygame.display.set_mode((0, 0))
-
+    
 # chama o menu principal
 Menu.menu_principal(janela, largura_janela, altura_janela)

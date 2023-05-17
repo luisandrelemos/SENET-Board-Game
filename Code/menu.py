@@ -23,7 +23,8 @@ class Menu:
         cor_tracado = '#d8b645'
 
         # define as fontes
-        fonte_opcoes = pygame.font.SysFont('romansd', 30)
+        fonte4_path= os.path.join('Fonts', 'roman_sd', 'Roman SD.ttf')
+        fonte_opcoes = pygame.font.Font(fonte4_path, 30)
     #-------------------------------------------------------------
 
     #------------------------DESIGN-DO-MENU-----------------------
