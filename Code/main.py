@@ -10,7 +10,7 @@ janela = pygame.display.set_mode((0, 0), pygame.FULLSCREEN|pygame.NOFRAME)
 
 # analisa e atribui as dimensões da janela
 largura_janela, altura_janela = janela.get_width(), janela.get_height()
-
+    
 Janela.janela_inicial(janela, largura_janela, altura_janela)
     
 # cria a janela

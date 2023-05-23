@@ -49,11 +49,11 @@ class Jogar:
         return paus, num_paus
 
     # Função para desenhar as paus na tela
-    def desenhar_paus(imagem, paus):
+    def desenhar_paus(janela, paus):
         pos_x = 645
         pos_y = 660
         for _, img_pau in paus:
-            imagem.blit(img_pau, (pos_x, pos_y))
+            janela.blit(img_pau, (pos_x, pos_y))
             pos_x += 70
 
     # Função para desenhar as paus na tela
@@ -72,7 +72,7 @@ class Jogar:
             pos_x += 70
 
     def jogar_partida(janela, largura_janela, altura_janela):
-    #---------------------IMAGENS---------------------
+    #---------------------IMAGENS----------------------------
         # Carrega a imagem de fundo de jogo
         imagem_fundo = pygame.image.load(os.path.join('images', 'JOGO.png'))
         # Redimensiona a imagem
@@ -91,7 +91,7 @@ class Jogar:
         # Redimensiona as imagens
         tamanho_novo = imagens_pecas[0].get_width() // 1.45, imagens_pecas[0].get_height() // 1.45
         imagens_pecas = [pygame.transform.smoothscale(img, tamanho_novo) for img in imagens_pecas]
-        imagens_pecas.extend([None] * 20)
+        imagens_pecas.extend([None] * 30)
 
         posicoes_casas = [(285, 300), (385, 300), (485, 300), (585, 300), (685, 300), 
                           (782, 300), (880, 300), (977, 300), (1076, 300), (1174, 300),
@@ -100,9 +100,12 @@ class Jogar:
                           (685, 400), (585, 400), (485, 400), (385, 400), (285, 400),
 
                           (285, 497), (385, 497), (485, 497), (585, 497), (685, 497),
-                          (782, 497), (880, 497), (977, 497), (1076, 497), (1175, 497)]
+                          (782, 497), (880, 497), (977, 497), (1076, 497), (1175, 497),
+                          
+                          (40, 150), (100, 150), (20, 210), (80, 210), (140, 210),
+                          (1370, 150), (1430, 150), (1340, 210), (1400, 210), (1460, 210)]
         
-        casas_ocupadas = ["Branco", "Preto"] * 5 + ["Nao Ocupado"] * 20
+        casas_ocupadas = ["Branco", "Preto"] * 5 + ["Nao Ocupado"] * 30
 
         # Carregue as imagens dos paus
         pau_preto = pygame.image.load(os.path.join('images', 'Sticks', 'BLACK.png'))
@@ -112,7 +115,7 @@ class Jogar:
         pau_branco = pygame.transform.smoothscale(pau_branco, pau_tamanho)
 
         tamanho_paus = pau_tamanho[0]*8, pau_tamanho[1]*8
-    #-------------------------------------------------
+    #------------------------------------------------------
 
     #---------------------CORES/FONTES---------------------
         # Define as variáveis de cor
@@ -134,23 +137,22 @@ class Jogar:
 
         fonte_path = os.path.join('Fonts','roman_sd', 'Roman SD.ttf')
         fonte_texto = pygame.font.Font(fonte_path, 25)
-    #--------------------------------------------------------------
+    #----------------------------------------------------------------
 
     #---------------------VARIÁVEIS-PARA-JOGADOR---------------------
         # Vai guardar os nomes
-        jogadores = []
-        jogador_coords = [(largura_janela // 10, altura_janela // 3.6), (largura_janela // 1.46, altura_janela // 3.6)]
+        #jogadores = []
+        #jogador_coords = [(largura_janela // 10, altura_janela // 3.6), (largura_janela // 1.46, altura_janela // 3.6)]
         nome = ''
 
         # Variáveis para a boxde nomes
-        box_coords = [(250, 235), (1120, 235)] # Coordenadas do retângulo
-        box_m = (140, 32) # Medidas do retângulo
-    #----------------------------------------------------------
+        box_coords = [(160, 235), (1060, 235)] # Coordenadas do retângulo
+        box_m = (300, 32) # Medidas do retângulo
+    #---------------------------------------------------------------
 
     #---------------------Variáveis-de-Controlo---------------------
         # Controlam telas
         players = True # Tela dos Nomes
-        rolar = True # Tela de decisão de ordem
         executando = True # Tela de Jogo
         pausado = False # Tela de Pausa
 
@@ -162,16 +164,19 @@ class Jogar:
         jogador_atual = 1
         # Verifica se o jogador já lançou
         lancamento = False
+        #
+        fora_brancas = 30
+        #
+        fora_pretas = 35
     #---------------------------------------------------------------
 
-    #---------------------FUNÇÕES-PARA-OS-PAUS---------------------
+    #---------------------FUNÇÕES-PARA-OS-PAUS----------------------
         # Escolhe a cor dos paus
         paus, num_paus = Jogar.escolher_cores(pau_branco, pau_preto)
-    #--------------------------------------------------------------
+    #---------------------------------------------------------------
 
-    #---------------------TELA-JOGADORES---------------------
+    #---------------------TELA-JOGADORES----------------------------
         while players:
-            janela.blit(imagem_fundo2, (0,0))
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -189,24 +194,29 @@ class Jogar:
 
                         if event.key == pygame.K_RETURN:
 
-                            imagem_fundo2.blit(jogador_nome, jogador_coords[jogador_atual-1]) # Mete os nomes dos jogadores em posções diferentes
-                            jogadores.append(nome) # Guarda os nomes numa variável
+                            #background_portion = imagem_fundo2.subsurface(input_box) # Obtém a porção coberta pela box
+                            #janela.blit(background_portion, input_box) # Tapa a box com essa porção
 
-                            background_portion = imagem_fundo2.subsurface(input_box) # Obtém a porção coberta pela box
-                            janela.blit(background_portion, input_box) # Tapa a box com essa porção
+                            #imagem_fundo2.blit(jogador_nome, jogador_coords[jogador_atual-1]) # Mete os nomes dos jogadores em posções diferentes
+                            #jogadores.append(nome) # Guarda os nomes numa variável
+
+                            if enter<1:
+                                enter += 1 # Muda para as próximas coordenadas da input_box
+
+                            if jogador_atual<=2:
+                                if jogador_atual==1:
+                                    Jogar.desenhar_paus2(imagem_fundo2, paus)
+                                else:
+                                    Jogar.desenhar_paus3(janela, paus)
+
                             box_ativado = False # Desativa a box
                             nome = '' # limpa o texto na box
                             jogador_atual += 1 # Muda para o próximo jogador
-                            if enter<1: 
-                                Jogar.desenhar_paus2(imagem_fundo2, paus)
-                                enter += 1 # Muda para as próximas coordenadas da input_box
-                                Jogar.desenhar_paus3(imagem_fundo2, paus)
 
-                            # Escolhe a cor dos paus
-                            paus, num_paus = Jogar.escolher_cores(pau_branco, pau_preto)
+                            paus, num_paus = Jogar.escolher_cores(pau_branco, pau_preto)# Escolhe a cor dos paus
 
                         tecla = event.unicode
-                        if tecla.isalpha() or tecla.isdigit(): # Verifica se o caracter é alfanumérico
+                        if tecla.isalpha() or tecla.isdigit() or tecla == " ": # Verifica se o caracter é alfanumérico
                             nome += tecla # Adiciona o caracter ao nome
 
                 # Troca a cor da box dependendo se está "ativada" ou não
@@ -229,16 +239,14 @@ class Jogar:
             nome_texto = fonte_texto.render(nome, True, cor_texto2)
             imagem_fundo2.blit(nome_texto, (input_box.x+5, input_box.y+5))
 
-            # Apresenta o nome do jogador
-            jogador_nome = fonte_texto.render(f'Jogador {jogador_atual}: {nome}', True, cor_texto2)
-            
+            janela.blit(imagem_fundo2, (0,0))
             pygame.display.flip()
-    #------------------------------------------------------
+    #-------------------------------------------------------
 
         # Desenha as paus na tela
         Jogar.desenhar_paus(imagem_fundo, paus)
-    
-    #---------------------EXECUTA-JOGO---------------------
+
+    #---------------------EXECUTA-JOGO----------------------
         while executando:
         #---------------------VERIFICA-EVENTOS-PARA-A-TELA DE-PAUSA---------------------
             for event in pygame.event.get():
@@ -272,7 +280,7 @@ class Jogar:
                                     quit()
         #-------------------------------------------------------------------------------
 
-        #---------------------BLIT-DE-IMAGENS---------------------
+        #---------------------BLIT-DE-IMAGENS-------------------------------------------
             # Desenha a imagem de fundo
             janela.blit(imagem_fundo, (0, 0))
             # Apresenta as peças no ecrã
@@ -281,7 +289,7 @@ class Jogar:
                     janela.blit(img, posicoes_casas[i])
         #---------------------------------------------------------
 
-        #---------------------PAUSA---------------------
+        #---------------------PAUSA-------------------------------
             if pausado:
                 # Desenha a tela de pausa
                 tela_pausa = pygame.Surface((largura_janela, altura_janela), pygame.SRCALPHA)
@@ -309,9 +317,9 @@ class Jogar:
 
                     janela.blit(texto_opcao, (x_opcao+5, y_opcao+5))
                     y_opcao += 50
-        #------------------------------------------------------
+        #----------------------------------------------------------
 
-        #---------------------PEÇAS---------------------
+        #---------------------PEÇAS--------------------------------
             else:
             #---------------------HOVERS-E-PAUS---------------------
                 for i, posicao in enumerate(posicoes_casas):
@@ -355,7 +363,7 @@ class Jogar:
                         lancamento=True
             #-------------------------------------------------------
 
-            #---------------------MOVIMENTO---------------------
+            #---------------------MOVIMENTO-------------------------
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         pygame.quit()
@@ -386,8 +394,23 @@ class Jogar:
                                                 casas_ocupadas[i] = "Nao Ocupado" if next_casa == "Nao Ocupado" else "Preto" if next_casa == "Preto" else "Branco"
                                             lancamento=False
 
+                                        elif next_pos>29 and i<=29:
+                                            if casas_ocupadas[i] == "Branco":
+                                                imagens_pecas[i] = pygame.transform.smoothscale(imagens_pecas[i], (50, 50))
+                                                imagens_pecas[i], imagens_pecas[fora_brancas] = imagens_pecas[fora_brancas], imagens_pecas[i]
+                                                casas_ocupadas[i] = "Nao Ocupado"
+                                                fora_brancas += 1
+                                                lancamento=False
+
+                                            elif casas_ocupadas[i] == "Preto":
+                                                imagens_pecas[i] = pygame.transform.smoothscale(imagens_pecas[i], (50, 50))
+                                                imagens_pecas[i], imagens_pecas[fora_pretas] = imagens_pecas[fora_pretas], imagens_pecas[i]
+                                                casas_ocupadas[i] = "Nao Ocupado"
+                                                fora_pretas += 1
+                                                lancamento=False
+
                                         # Casas Especiais
-                                        if i>=25:
+                                        if i>=25 and i<=29:
                                             # Verifica se a peça vai para a casa 27
                                             if next_pos == 26:
                                                 imagens_pecas[i], imagens_pecas[14] = imagens_pecas[14], imagens_pecas[i] # Transporta a peça para a casa 15
@@ -397,7 +420,7 @@ class Jogar:
                                                 lancamento=False
 
                                             # Verifica se a peça vai para a casa 28
-                                            if i==27:
+                                            elif i==27:
                                                 if num_paus==3: # Condição que aoenas permite mover se se sair 3
                                                     imagens_pecas[i], imagens_pecas[next_pos] = imagens_pecas[next_pos], imagens_pecas[i]
 
@@ -422,6 +445,6 @@ class Jogar:
                                                 lancamento=False
 
             #---------------------------------------------------
-        #-----------------------------------------------
-            pygame.display.flip() # atualiza apenas uma porção do ecrã (assim não consome tanto)
-    #------------------------------------------------------
+        #-------------------------------------------------------
+            pygame.display.flip() # atualiza apenas uma porção do ecrã
+    #-----------------------------------------------------------
