@@ -1,5 +1,6 @@
 import pygame
 import os
+import os.path
 from jogar import Jogar
 from carregar import Carregar
 from descricao import Regras

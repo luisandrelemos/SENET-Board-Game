@@ -28,7 +28,7 @@ class Jogar:
                     return True
                 else:
                     return False
-                
+            
     # Função para escolher aleatoriamente as cores das paus
     def escolher_cores(pau_branco, pau_preto):
         cores = ["WHITE", "BLACK"]
@@ -141,8 +141,6 @@ class Jogar:
 
     #---------------------VARIÁVEIS-PARA-JOGADOR---------------------
         # Vai guardar os nomes
-        #jogadores = []
-        #jogador_coords = [(largura_janela // 10, altura_janela // 3.6), (largura_janela // 1.46, altura_janela // 3.6)]
         nome = ''
 
         # Variáveis para a boxde nomes
@@ -168,6 +166,15 @@ class Jogar:
         fora_brancas = 30
         #
         fora_pretas = 35
+        #
+        estado_do_jogo = {
+            "imagens_pecas": imagens_pecas,
+            "casas_ocupadas": casas_ocupadas,
+            "fora_brancas": fora_brancas,
+            "fora_pretas": fora_pretas,
+            "jogador_atual": jogador_atual,
+            # adicione outras informações relevantes do jogo aqui
+        }   
     #---------------------------------------------------------------
 
     #---------------------FUNÇÕES-PARA-OS-PAUS----------------------
@@ -193,12 +200,6 @@ class Jogar:
                             nome = nome[:-1] # Retira o últmo item da lista
 
                         if event.key == pygame.K_RETURN:
-
-                            #background_portion = imagem_fundo2.subsurface(input_box) # Obtém a porção coberta pela box
-                            #janela.blit(background_portion, input_box) # Tapa a box com essa porção
-
-                            #imagem_fundo2.blit(jogador_nome, jogador_coords[jogador_atual-1]) # Mete os nomes dos jogadores em posções diferentes
-                            #jogadores.append(nome) # Guarda os nomes numa variável
 
                             if enter<1:
                                 enter += 1 # Muda para as próximas coordenadas da input_box
@@ -270,8 +271,9 @@ class Jogar:
                                 if opcao == 'Continuar':
                                     pausado = False
                                 elif opcao == 'Salvar Jogo':
-                                    # Insira aqui o código para salvar o jogo
-                                    pass
+                                    # Salva o estado atual do jogo em um arquivo
+                                    with open("estado_do_jogo.txt", "w") as arquivo:
+                                        arquivo.write(str(estado_do_jogo))
                                 elif opcao == 'Menu':
                                     # retorna ao menu principal
                                     return
