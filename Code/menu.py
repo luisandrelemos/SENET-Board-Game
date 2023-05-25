@@ -4,6 +4,7 @@ import os.path
 from jogar import Jogar
 from carregar import Carregar
 from descricao import Regras
+from settings import Settings
 from quit import Sair
 from pygame import mixer
 
@@ -34,7 +35,8 @@ class Menu:
         opcoes = [
             {'texto': 'Jogar Partida', 'funcao': lambda: submenu_jogar_partida(janela, largura_janela, altura_janela)},
             {'texto': 'Carregar', 'funcao': Carregar.carregar_partida},
-            {'texto': 'Descrição', 'funcao': lambda: Regras.descricao_jogo(janela, largura_janela, altura_janela)},
+            {'texto': 'Regras', 'funcao': lambda: Regras.descricao_jogo(janela, largura_janela, altura_janela)},
+            {'texto': 'Definições', 'funcao': lambda: Settings.settings_jogo(janela, largura_janela, altura_janela)},
             {'texto': 'Sair', 'funcao': Sair.sair}
         ]
 
@@ -42,8 +44,8 @@ class Menu:
         largura_botao = 300
         altura_botao = 50
         margem_botao = 20
-        x_botao = largura_janela // 1.1 - largura_botao // 1.1
-        y_botao = altura_janela // 1.7 - altura_botao // 1.7
+        x_botao = largura_janela // 14 - largura_botao // 14
+        y_botao = altura_janela // 1.8 - altura_botao // 1.8
         botoes = []
         for i, opcao in enumerate(opcoes):
             x = x_botao

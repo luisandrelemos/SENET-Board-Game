@@ -9,7 +9,7 @@ class Regras:
         imagem_fundo = pygame.image.load(os.path.join('images', 'REGRAS.png'))
         # redimensiona a imagem para as dimensões da janela
         imagem_fundo = pygame.transform.smoothscale(imagem_fundo, (largura_janela, altura_janela))
-     #-------------------------------------------------------------
+    #-------------------------------------------------------------
         
     #-----------------------CORES/FONTES---------------------------
         # Define as variáveis de cor
@@ -30,7 +30,6 @@ class Regras:
         y_botao = altura_janela - altura_botao - 27
         botao_voltar = pygame.Rect(x_botao, y_botao, largura_botao, altura_botao)
     #---------------------------------------------------------------
-
 
     #---------------------Variáveis-de-Controlo---------------------
         # Define a flag para verificar se a descrição está em execução

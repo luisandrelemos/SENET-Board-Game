@@ -186,9 +186,15 @@ class Jogar:
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if input_box.collidepoint(pygame.mouse.get_pos()):
                         box_ativado = True # Ativa a box
+                        option_sound = mixer.Sound(os.path.join('sounds', 'option.mp3'))
+                        option_sound.set_volume(0.4) # Define o volume para 40%
+                        option_sound.play()
 
                 if box_ativado:
                     if event.type == pygame.KEYDOWN:
+                        type_sound = mixer.Sound(os.path.join('sounds', 'type.mp3'))
+                        type_sound.set_volume(0.4) # Define o volume para 40%
+                        type_sound.play()
                         if event.key == pygame.K_BACKSPACE:
                             nome = nome[:-1] # Retira o últmo item da lista
 
@@ -362,9 +368,6 @@ class Jogar:
                         
                         lancamento=True
             #-------------------------------------------------------
-
-
-
 
             #---------------------MOVIMENTO-------------------------
                 for event in pygame.event.get():
