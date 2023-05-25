@@ -5,6 +5,7 @@ from jogar import Jogar
 from carregar import Carregar
 from descricao import Regras
 from quit import Sair
+from pygame import mixer
 
 class Menu:
     def menu_principal(janela, largura_janela, altura_janela):
@@ -67,6 +68,9 @@ class Menu:
                     x, y = event.pos
                     for botao in botoes:
                         if botao['retangulo'].collidepoint(x, y):
+                            option_sound = mixer.Sound(os.path.join('sounds', 'option.mp3'))
+                            option_sound.set_volume(0.4) # Define o volume para 40%
+                            option_sound.play()
                             botao['funcao']()
 
             # preenche o fundo da janela com a imagem de fundo
@@ -147,6 +151,9 @@ class Menu:
                             pygame.quit()
                             quit()
                         elif event.type == pygame.MOUSEBUTTONDOWN:
+                            option_sound = mixer.Sound(os.path.join('sounds', 'option.mp3')) # Adiciona o Som de Clique
+                            option_sound.set_volume(0.4) # Define o volume para 40%
+                            option_sound.play()
                             # verifica se o jogador clicou num botão
                             x, y = event.pos
                             for botao in botoes_submenu:

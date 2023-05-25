@@ -2,6 +2,7 @@ import pygame
 import os
 import random
 import time
+from pygame import mixer
 
 class Jogar:
     def procura_block(casas_ocupadas, next_pos):
@@ -166,15 +167,7 @@ class Jogar:
         fora_brancas = 30
         #
         fora_pretas = 35
-        #
-        estado_do_jogo = {
-            "imagens_pecas": imagens_pecas,
-            "casas_ocupadas": casas_ocupadas,
-            "fora_brancas": fora_brancas,
-            "fora_pretas": fora_pretas,
-            "jogador_atual": jogador_atual,
-            # adicione outras informações relevantes do jogo aqui
-        }   
+        
     #---------------------------------------------------------------
 
     #---------------------FUNÇÕES-PARA-OS-PAUS----------------------
@@ -262,6 +255,9 @@ class Jogar:
                             # Retorna ao jogo
                             pausado = False
                 elif event.type == pygame.MOUSEBUTTONDOWN:
+                    option_sound = mixer.Sound(os.path.join('sounds', 'option.mp3'))
+                    option_sound.set_volume(0.4) # Define o volume para 40%
+                    option_sound.play()
                     if pausado:
                         x, y = pygame.mouse.get_pos()
                         for i, opcao in enumerate(opcoes):
@@ -271,9 +267,8 @@ class Jogar:
                                 if opcao == 'Continuar':
                                     pausado = False
                                 elif opcao == 'Salvar Jogo':
-                                    # Salva o estado atual do jogo em um arquivo
-                                    with open("estado_do_jogo.txt", "w") as arquivo:
-                                        arquivo.write(str(estado_do_jogo))
+                                    # adicionar aqui funçao para salvar
+                                    pass
                                 elif opcao == 'Menu':
                                     # retorna ao menu principal
                                     return
@@ -338,6 +333,9 @@ class Jogar:
                     janela.blit(paus_hover, (640, 655))
 
                     if pygame.mouse.get_pressed()[0] and lancamento==False:
+                        sticks_sound = mixer.Sound(os.path.join('sounds', 'sticks.mp3'))
+                        sticks_sound.set_volume(0.4) # Define o volume para 40%
+                        sticks_sound.play()
                         # Escolhe a cor dos paus
                         cores = ["WHITE", "BLACK"]
                         paus = []
@@ -365,6 +363,9 @@ class Jogar:
                         lancamento=True
             #-------------------------------------------------------
 
+
+
+
             #---------------------MOVIMENTO-------------------------
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
@@ -382,6 +383,9 @@ class Jogar:
                             if pygame.Rect(pos, tamanho_novo).collidepoint(mouse_pos):
                                 # Controla o movimento das peças
                                 if casas_ocupadas[i] in ["Branco", "Preto"] and lancamento==True: # Verifica qual a cor da peça clicada e se o utilizador já lançou
+                                    pieces = mixer.Sound(os.path.join('sounds', 'pieces.mp3'))
+                                    pieces.set_volume(1) # Define o volume para 40%
+                                    pieces.play()
                                     next_casa = casas_ocupadas[next_pos]
 
                                     block = Jogar.procura_block(casas_ocupadas, next_pos)

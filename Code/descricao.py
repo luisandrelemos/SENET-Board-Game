@@ -1,5 +1,6 @@
 import pygame
 import os
+from pygame import mixer
 
 class Regras:
     def descricao_jogo(janela, largura_janela, altura_janela):
@@ -46,6 +47,9 @@ class Regras:
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     # Verifica se o jogador clicou no botão Voltar
                     if botao_voltar.collidepoint(pygame.mouse.get_pos()):
+                        option_sound = mixer.Sound(os.path.join('sounds', 'option.mp3'))
+                        option_sound.set_volume(0.4) # Define o volume para 40%
+                        option_sound.play()
                         return
 
             # Preenche o fundo da janela
