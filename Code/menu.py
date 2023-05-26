@@ -2,6 +2,7 @@ import pygame
 import os
 import os.path
 from jogar import Jogar
+from jogarbot import Jogarbot
 from carregar import Carregar
 from descricao import Regras
 from settings import Settings
@@ -118,7 +119,7 @@ class Menu:
                 largura_sombra = 3
 
                 opcoes_submenu = [
-                    {'texto': 'Computador', 'funcao': lambda :Jogar.jogar_partida(janela, largura_janela, altura_janela)},
+                    {'texto': 'Computador', 'funcao': lambda :Jogarbot.jogar_bot(janela, largura_janela, altura_janela)},
                     {'texto': 'Outro Jogador', 'funcao': lambda :Jogar.jogar_partida(janela, largura_janela, altura_janela)}
                 ]
 
