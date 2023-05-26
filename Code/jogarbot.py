@@ -80,21 +80,19 @@ class Jogarbot:
                             nome = nome[:-1]#retira o ultimo item da lista
 
                         if event.key == pygame.K_RETURN:
-                            if enter<1:
-                                if jogador_atual<=2: 
+                                if jogador_atual==1: 
                                         Jogar.desenhar_paus2(imagem_fundo3, paus)
                                         n_paus = num_paus
-                                        box_ativado = False
                                         while n_paus == num_paus:
                                             paus, num_paus = Jogar.escolher_cores(pau_branco, pau_preto)
                                             Jogar.desenhar_paus3(imagem_fundo3, paus)
                         
-                            box_ativado = False # Desativa a box
-                            jogador_atual += 1
-                            paus, num_paus = Jogar.escolher_cores(pau_branco, pau_preto)
+                                box_ativado = True # Desativa a box
+                                jogador_atual += 1
+                                paus, num_paus = Jogar.escolher_cores(pau_branco, pau_preto)
 
                         tecla = event.unicode
-                        if tecla.isalpha() or tecla.isdigit(): # Verifica se o caracter é alfanumérico
+                        if tecla.isalpha() or tecla.isdigit() or tecla == ' ': # Verifica se o caracter é alfanumérico
                             nome += tecla # Adiciona o caracter ao nome
             
                 # Troca a cor da box dependendo se está "ativada" ou não
@@ -102,11 +100,7 @@ class Jogarbot:
                     box_cor = box_ativo
                 else:
                     box_cor = box_passivo
-                # Fecha a tela após o limite de jogadores ser atingido
-                if jogador_atual==3:
-                    pygame.display.flip()
-                    pygame.time.delay(1500)# Pausa por 3000 milissegundos (3 segundos)
-                    players = False
+                
             #cria a box do nome
             input_box = pygame.Rect(box_coords, box_m)
             pygame.draw.rect(imagem_fundo3, box_cor, input_box)
