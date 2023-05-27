@@ -164,7 +164,6 @@ class Jogar:
         # Vai guardar os nomes
         jogadores = []
         nome = ''
-        nome_jogador = ''
 
         # Variáveis para a boxde nomes
         box_coords = [(160, 235), (1060, 235)] # Coordenadas do retângulo
@@ -176,18 +175,17 @@ class Jogar:
         players = True # Tela dos Nomes
         executando = True # Tela de Jogo
         pausado = False # Tela de Pausa
-
-        # Controla a cor da caixa de input do nome
-        box_ativado = False
-        # Usada para controlar as coordenadas da box
-        enter = 0
-        # Verifica o jogador atual
-        jogador_atual = 1
-        lance = 0
+       
+        box_ativado = False # Controla a cor da caixa de input do nome
+        enter = 0 # Usada para controlar as coordenadas da box
+        jogador_atual = 1 # Verifica o jogador atual
+        lance = 1 # Verifica quantos lances foram feitos
+        lancamento = False # Verifica se o jogador já lançou
+    
+        # Usadas para os paus de iniciais de cada jogador
         paus1 = 0
         paus2 = 0
-        # Verifica se o jogador já lançou
-        lancamento = False
+       
         # Usado para mandar as peças para fora do tabuleiro
         fora_brancas = 30
         fora_pretas = 35
@@ -228,7 +226,6 @@ class Jogar:
                                 if jogador_atual==1:
                                     Jogar.desenhar_paus2(imagem_fundo2, paus)
                                     paus1 = num_paus
-                                    nome_jogador = nome
                                 else:
                                     while paus1 == num_paus:
                                         paus, num_paus = Jogar.escolher_cores(pau_branco, pau_preto) # Escolhe a cor dos paus
@@ -326,8 +323,9 @@ class Jogar:
         #---------------------BLIT-DE-IMAGENS---------------------
             janela.blit(imagem_fundo, (0, 0))
             # Exibir turno do jogador atual
-            texto_turno = fonte.render(f"Turno do Jogador: {nome_jogador}", True, cor_texto2)
-            janela.blit(texto_turno, (500, 20))
+            texto_turno = fonte.render(f"Turno de \"{jogadores[jogador_atual][0]}\"", True, cor_texto2)
+            texto_turno_w = texto_turno.get_width()
+            janela.blit(texto_turno, ((largura_janela - texto_turno_w)//2, 20))
             # Apresenta as peças no ecrã
             for i, img in enumerate(imagens_pecas):
                 if img != None:
@@ -380,43 +378,42 @@ class Jogar:
                     pygame.draw.rect(paus_hover, (255, 255, 255, 55), paus_hover.get_rect(), border_radius=5)
                     janela.blit(paus_hover, (640, 655))
 
-                    paus_rep = paus
-                    if pygame.mouse.get_pressed()[0] and lancamento==False:
-                        sticks_sound = mixer.Sound(os.path.join('sounds', 'sticks.mp3'))
-                        sticks_sound.set_volume(0.4) # Define o volume para 40%
-                        sticks_sound.play()
-                        # Escolhe a cor dos paus
-                        cores = ["WHITE", "BLACK"]
-                        pos_x = 645
-                        pos_y = 660
-                        while paus_rep==paus: # Isto permite nunca haver uma combinação de paus igual à anterior
-                            paus = []
-                            num_paus = 0
-                            for _ in range(4):
-                                cor = random.choice(cores)
-                                if cor == "WHITE":
-                                    img_pau = pau_branco
-                                    num_paus +=1
-                                else:
-                                    img_pau = pau_preto
-                                paus.append((cor, img_pau))
+                    for event in pygame.event.get():
+                        if event.type == pygame.MOUSEBUTTONUP and not lancamento:
+                            # Escolhe a cor dos paus
+                            cores = ["WHITE", "BLACK"]
+                            pos_x = 645
+                            pos_y = 660
+                            paus_rep = paus
+                            while paus_rep==paus: # Isto permite nunca haver uma combinação de paus igual à anterior
+                                paus = []
+                                num_paus = 0
+                                for _ in range(4):
+                                    cor = random.choice(cores)
+                                    if cor == "WHITE":
+                                        img_pau = pau_branco
+                                        num_paus +=1
+                                    else:
+                                        img_pau = pau_preto
+                                    paus.append((cor, img_pau))
 
-                        # define que o número de casas a andar é 5 se houver 4 paus pretos
-                        if num_paus==0:
-                            num_paus=5
+                            # Define que o número de casas a andar é 5 se houver 4 paus pretos
+                            if num_paus==0:
+                                num_paus=5
 
-                        if lance!=0:
-                            if num_paus not in [1, 4, 5]:
+                            lancamento=True
+
+                            if lance!=1 and num_paus not in [1, 4, 5]:
                                 jogador_atual = jogador_atual + 1 if jogador_atual==0 else jogador_atual - 1
-                                lance = 0
+                                lance = 1
+                                lancamento=False
+                            else:
+                                lance+=1
 
-                        # Desenha as paus na tela
-                        for _, img_pau in paus:
-                            imagem_fundo.blit(img_pau, (pos_x, pos_y))
-                            pos_x += 70
-
-                        lancamento=True
-                    lance = num_paus
+                            # Apresenta os paus na tela
+                            for _, img_pau in paus:
+                                imagem_fundo.blit(img_pau, (pos_x, pos_y))
+                                pos_x += 70
             #-------------------------------------------------------
 
             #---------------------MOVIMENTO---------------------
@@ -480,7 +477,6 @@ class Jogar:
 
                                             elif i==29:
                                                 imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento = Jogar.fora_tabuleiro(i, imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento)
-
             #---------------------------------------------------
         #-----------------------------------------------
             pygame.display.flip() # atualiza apenas uma porção do ecrã
