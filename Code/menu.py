@@ -3,7 +3,7 @@ import os
 import os.path
 from jogar import Jogar
 from jogarbot import Jogarbot
-from carregar import Carregar
+from load import Load 
 from descricao import Regras
 from settings import Settings
 from quit import Sair
@@ -35,7 +35,7 @@ class Menu:
         # define as opções do menu
         opcoes = [
             {'texto': 'Jogar Partida', 'funcao': lambda: submenu_jogar_partida(janela, largura_janela, altura_janela)},
-            {'texto': 'Carregar', 'funcao': Carregar.carregar_partida},
+            {'texto': 'Load Game', 'funcao': Load.load_game},
             {'texto': 'Regras', 'funcao': lambda: Regras.descricao_jogo(janela, largura_janela, altura_janela)},
             {'texto': 'Definições', 'funcao': lambda: Settings.settings_jogo(janela, largura_janela, altura_janela)},
             {'texto': 'Sair', 'funcao': Sair.sair}

@@ -309,8 +309,8 @@ class Jogar:
                             if pygame.Rect(x_opcao - 5, y_opcao - 5, fonte_texto.size(opcao)[0] + 10, fonte_texto.size(opcao)[1] + 10).collidepoint(x, y):
                                 if opcao == 'Continuar':
                                     pausado = False
-                                elif opcao == 'Salvar Jogo':
-                                    # Insira aqui o código para salvar o jogo
+                                elif opcao == 'Save Game':
+                                    # SAVE GAME CODE HERE
                                     pass
                                 elif opcao == 'Menu':
                                     # retorna ao menu principal
@@ -342,7 +342,7 @@ class Jogar:
                 tela_pausa = fonte.render('Jogo Pausado', True, cor_texto_tela_pausa)
                 janela.blit(tela_pausa, (largura_janela // 2 - tela_pausa.get_width() // 2, altura_janela // 2 - 50))
 
-                opcoes = ['Continuar', 'Salvar Jogo', 'Menu', 'Sair']
+                opcoes = ['Continuar', 'Save Game', 'Menu', 'Sair']
                 y_opcao = altura_janela // 2 + 50
                 for opcao in opcoes:
                     texto_opcao = fonte_texto.render(opcao, True, cor_texto)
