@@ -1,0 +1,1 @@
+[('WHITE', <Surface(30x140x32 SW)>), ('BLACK', <Surface(30x140x32 SW)>), ('BLACK', <Surface(30x140x32 SW)>), ('BLACK', <Surface(30x140x32 SW)>)]
