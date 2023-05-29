@@ -196,9 +196,9 @@ class Jogar:
     #---------------------FUNÇÕES-PARA-OS-PAUS----------------------
         # Escolhe a cor dos paus
         paus, num_paus = Jogar.escolher_cores(pau_branco, pau_preto)
-    #--------------------------------------------------------------
+    #---------------------------------------------------------------
 
-    #---------------------TELA-JOGADORES---------------------------
+    #----------------------TELA-JOGADORES---------------------------
         while players:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -470,7 +470,7 @@ class Jogar:
                                                 casas_ocupadas[i] = "Nao Ocupado" if next_casa == "Nao Ocupado" else "Preto" if next_casa == "Preto" else "Branco"
                                                 lancamento=False
 
-                                            elif i==25 and next_pos in [27, 28, 29]:
+                                            elif i==25 and next_pos in [27, 28, 29, 30]:
                                                 imagens_pecas[i], imagens_pecas[next_pos] = imagens_pecas[next_pos], imagens_pecas[i]
 
                                                 casas_ocupadas[next_pos] = "Preto" if casas_ocupadas[i] == "Preto" else "Branco"
@@ -487,7 +487,12 @@ class Jogar:
 
                                             elif i==29:
                                                 imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento = Jogar.fora_tabuleiro(i, imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento)
+            
+                            if i>29 and (casas_ocupadas[i].count("Branco") == 5 or casas_ocupadas[i].count("Preto") == 5):
+                                vencedor = fonte.render(f"Vencedor: \"{jogadores[jogador_atual][0]}\"", True, cor_texto)
+                                janela.blit(vencedor, (largura_janela // 2 - vencedor.get_width() // 2, altura_janela // 2))
+            
             #---------------------------------------------------
-        #-----------------------------------------------
+        #--------------------------------------------------
             pygame.display.flip() # atualiza apenas uma porção do ecrã
     #------------------------------------------------------

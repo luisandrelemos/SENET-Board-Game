@@ -93,8 +93,6 @@ class Jogar_load:
 
     # Função responsável pelo jogo no geral
     def jogar_partida(janela, largura_janela, altura_janela):
-        image_folder = "Code\Save Data\Image Save"
-        os.makedirs(image_folder, exist_ok=True)
     #---------------------IMAGENS---------------------
         # Carrega a imagem de fundo de jogo
         imagem_fundo = pygame.image.load(os.path.join('images', 'JOGO.png'))
@@ -199,10 +197,6 @@ class Jogar_load:
         with open('Code\Save Data\save_turnojogador.txt', 'r') as load:
             turno = load.read()
 
-        # Dá load da ordem dos paus que foram jogados pela última vez
-        # with open('Code\Save Data\save_paus.txt', 'r') as load:
-        #     paus = load.readlines()
-
         # Dá load da lista de jogadores e das suas peças
         with open('Code\Save Data\save_nomes.txt', 'r') as load:
             players = load.readlines()
@@ -231,7 +225,7 @@ class Jogar_load:
             if turno == jogador:
                 jogador_atual = i
     #----------------------------------------------
-        print(jogadores)
+
     #---------------------EXECUTA-JOGO---------------------
         while executando:
         #---------------------VERIFICA-EVENTOS-PARA-A-TELA DE-PAUSA---------------------
@@ -269,17 +263,6 @@ class Jogar_load:
                                     with open('Code\Save Data\save_nome.txt', 'w') as save:
                                             for jogador in jogadores:
                                                 save.write(f"{jogador[0]}, {jogador[1]}\n")
-
-                                    # Limpa a pasta de imagens
-                                    image_list = os.listdir(image_folder)
-                                    for img in image_list:
-                                        image_folder = os.path.join(image_folder, img)
-
-                                    # Salva as imagens na pasta
-                                    for index, img in enumerate(imagens_pecas):
-                                        if img is not None:
-                                            imagem = os.path.join(image_folder, f"surface_{index}.png")
-                                            pygame.image.save(img, imagem)
                                 elif opcao == 'Menu':
                                     # retorna ao menu principal
                                     return
@@ -384,7 +367,7 @@ class Jogar_load:
                                 pos_x += 70
             #-------------------------------------------------------
 
-            #---------------------MOVIMENTO---------------------
+            #-----------------------MOVIMENTO-----------------------
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         pygame.quit()
@@ -416,7 +399,7 @@ class Jogar_load:
                                                 # Muda o index das casas ocupadas
                                                 casas_ocupadas[next_pos] = "Preto" if casas_ocupadas[i] == "Preto" else "Branco"
                                                 casas_ocupadas[i] = "Nao Ocupado" if next_casa == "Nao Ocupado" else "Preto" if next_casa == "Preto" else "Branco"
-                                            lancamento=False
+                                                lancamento=False
 
                                         # Casas Especiais
                                         if 25<=i<30:
@@ -428,7 +411,7 @@ class Jogar_load:
                                                 casas_ocupadas[i] = "Nao Ocupado" if next_casa == "Nao Ocupado" else "Preto" if next_casa == "Preto" else "Branco"
                                                 lancamento=False
 
-                                            elif i==25 and next_pos in [27, 28, 29]:
+                                            elif i==25 and next_pos in [27, 28, 29, 30]:
                                                 imagens_pecas[i], imagens_pecas[next_pos] = imagens_pecas[next_pos], imagens_pecas[i]
 
                                                 casas_ocupadas[next_pos] = "Preto" if casas_ocupadas[i] == "Preto" else "Branco"
@@ -450,6 +433,6 @@ class Jogar_load:
                                 vencedor = fonte.render(f"Vencedor: \"{jogadores[jogador_atual][0]}\"", True, cor_texto)
                                 janela.blit(vencedor, (largura_janela // 2 - vencedor.get_width() // 2, altura_janela // 2))
             #---------------------------------------------------
-        #-----------------------------------------------
+        #--------------------------------------------------
             pygame.display.flip() # atualiza apenas uma porção do ecrã
     #------------------------------------------------------
