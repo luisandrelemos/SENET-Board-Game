@@ -137,7 +137,7 @@ class Jogar_load:
                           (285, 497), (385, 497), (485, 497), (585, 497), (685, 497),
                           (782, 497), (880, 497), (977, 497), (1076, 497), (1175, 497),
                           
-                          (40, 150), (100, 150), (20, 210), (80, 210), (140, 210),
+                          (50, 150), (110, 150), (20, 210), (80, 210), (140, 210),
                           (1370, 150), (1430, 150), (1340, 210), (1400, 210), (1460, 210)]
 
         # Carregue as imagens dos paus
@@ -224,12 +224,12 @@ class Jogar_load:
         for i in range(len(casas_ocupadas)):
             if casas_ocupadas[i]=="Branco":
                 imagem = pygame.image.load(os.path.join('Images', 'Peças', f'WHITE{white}.png'))
-                imagem = pygame.transform.smoothscale(imagem, tamanho_novo)
+                imagem = pygame.transform.smoothscale(imagem, tamanho_novo) if i<=29 else pygame.transform.smoothscale(imagem, (50, 50))
                 imagens_pecas.append(imagem)
                 white += 1
             elif casas_ocupadas[i]=="Preto":
                 imagem = pygame.image.load(os.path.join('Images', 'Peças', f'BLACK{black}.png'))
-                imagem = pygame.transform.smoothscale(imagem, tamanho_novo)
+                imagem = pygame.transform.smoothscale(imagem, tamanho_novo) if i<=29 else pygame.transform.smoothscale(imagem, (50, 50))
                 imagens_pecas.append(imagem)
                 black += 1
             else:
@@ -456,7 +456,7 @@ class Jogar_load:
                 vencedor_w = vencedor.get_width()
                 janela.blit(vencedor, ((largura_janela - vencedor_w)//2, altura_janela // 2))
 
-            #---------------------------------------------------
-        #-----------------------------------------------
+            #-----------------------------------------------------
+        #--------------------------------------------------
             pygame.display.flip() # atualiza apenas uma porção do ecrã
     #------------------------------------------------------

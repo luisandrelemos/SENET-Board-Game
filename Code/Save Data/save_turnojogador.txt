@@ -1,1 +1,1 @@
-('PRETA', 'Preto')
+('BRANCA', 'Branco')
