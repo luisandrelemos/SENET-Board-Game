@@ -5,30 +5,31 @@ from pygame import mixer
 class Regras:
     def descricao_jogo(janela, largura_janela, altura_janela):
     #-------------------------IMAGENS------------------------------
-        # carrega a imagem de fundo
+        # Carrega a imagem de fundo
         imagem_fundo = pygame.image.load(os.path.join('images', 'REGRAS.png'))
-        # redimensiona a imagem para as dimensões da janela
+        # Redimensiona a imagem para as dimensões da janela
         imagem_fundo = pygame.transform.smoothscale(imagem_fundo, (largura_janela, altura_janela))
+        # Carrega as imagens dos botões
+        botao_normal_img = pygame.image.load(os.path.join('images', 'button2.png'))
+        botao_hover_img = pygame.image.load(os.path.join('images', 'button_hover2.png'))
+        # Redimensiona a imagem para as dimensões desejadas
+        botao_normal_img = pygame.transform.smoothscale(botao_normal_img, (200, 70))
+        botao_hover_img = pygame.transform.smoothscale(botao_hover_img, (200, 70))
     #-------------------------------------------------------------
         
     #-----------------------CORES/FONTES---------------------------
         # Define as variáveis de cor
         cor_texto = '#000000'
-        cor_tracado = '#d8b645'
-        cor_botao_normal = '#c4c1c1ff'
-        cor_botao_hover = '#d8b645'
 
         # Define as fontes
         fonte_texto = pygame.font.SysFont('romansd', 25)
     #---------------------------------------------------------------
 
     #------------------------DESIGN-DE-BOTÃO------------------------
-        # Define o botão Voltar
-        largura_botao = 150
-        altura_botao = 50
-        x_botao = largura_janela // 1.02 - largura_botao // 1.02
-        y_botao = altura_janela - altura_botao - 27
-        botao_voltar = pygame.Rect(x_botao, y_botao, largura_botao, altura_botao)
+        # Define a área clicável da imagem
+        botao_rect = botao_normal_img.get_rect()
+        botao_rect.x = largura_janela - botao_rect.width - 27
+        botao_rect.y = altura_janela - botao_rect.height - 27
     #---------------------------------------------------------------
 
     #---------------------Variáveis-de-Controlo---------------------
@@ -45,25 +46,25 @@ class Regras:
                     quit()
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     # Verifica se o jogador clicou no botão Voltar
-                    if botao_voltar.collidepoint(pygame.mouse.get_pos()):
+                    if botao_rect.collidepoint(pygame.mouse.get_pos()):
                         option_sound = mixer.Sound(os.path.join('sounds', 'option.mp3'))
                         option_sound.set_volume(0.4) # Define o volume para 40%
                         option_sound.play()
                         return
+                    
+            # Verifica se o mouse está sobre o botão
+            if botao_rect.collidepoint(pygame.mouse.get_pos()):
+                botao_img = botao_hover_img
+            else:
+                botao_img = botao_normal_img
 
             # Preenche o fundo da janela
             janela.blit(imagem_fundo, (0, 0))
-
-            # Desenha o botão Voltar
-            if botao_voltar.collidepoint(pygame.mouse.get_pos()):
-                cor_botao = cor_botao_hover
-            else:
-                cor_botao = cor_botao_normal
-            pygame.draw.rect(janela, cor_botao, botao_voltar)
-            pygame.draw.rect(janela, cor_tracado, botao_voltar, 2)
+            janela.blit(botao_img, botao_rect)
+    
             texto_voltar = fonte_texto.render('Voltar', True, cor_texto)
-            x_texto_voltar = botao_voltar.centerx - texto_voltar.get_width() // 2
-            y_texto_voltar = botao_voltar.centery - texto_voltar.get_height() // 2
+            x_texto_voltar = botao_rect.centerx - texto_voltar.get_width() // 2
+            y_texto_voltar = botao_rect.centery - texto_voltar.get_height() // 1.7
             janela.blit(texto_voltar, (x_texto_voltar, y_texto_voltar))
 
             # Atualiza a janela

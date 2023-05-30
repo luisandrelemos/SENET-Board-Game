@@ -1,2 +1,2 @@
-cona, Preto
-ze, Branco
+ola, Branco
+adeus, Preto

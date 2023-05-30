@@ -260,7 +260,7 @@ class Jogar_load:
                                             save.write(str(jogadores[jogador_atual]))
                                     with open('Code\Save Data\save_paus.txt', 'w') as save:
                                             save.write(str(paus))
-                                    with open('Code\Save Data\save_nome.txt', 'w') as save:
+                                    with open('Code\Save Data\save_nomes.txt', 'w') as save:
                                             for jogador in jogadores:
                                                 save.write(f"{jogador[0]}, {jogador[1]}\n")
                                 elif opcao == 'Menu':
@@ -368,6 +368,7 @@ class Jogar_load:
             #-------------------------------------------------------
 
             #-----------------------MOVIMENTO-----------------------
+                mostrando_vencedor = False # Variável para controlar se a mensagem de vencedor está sendo exibida
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         pygame.quit()
@@ -429,9 +430,20 @@ class Jogar_load:
                                             elif i==29:
                                                 imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento = Jogar_load.fora_tabuleiro(i, imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento)
 
-                            if i>29 and (casas_ocupadas[i].count("Branco") == 5 or casas_ocupadas[i].count("Preto") == 5):
+                            # Mostra mensagem de vencedor se 5 peças brancas ou pretas saírem da posição 29
+                            if not mostrando_vencedor and (fora_brancas == 5 or fora_pretas == 5):
+                                mostrando_vencedor = True
                                 vencedor = fonte.render(f"Vencedor: \"{jogadores[jogador_atual][0]}\"", True, cor_texto)
-                                janela.blit(vencedor, (largura_janela // 2 - vencedor.get_width() // 2, altura_janela // 2))
+
+                        # Desenha mensagem de vencedor se a variável mostrando_vencedor for True
+                        if mostrando_vencedor:
+                            janela.blit(vencedor, (largura_janela // 2 - vencedor.get_width() // 2, altura_janela // 2))
+
+                        # Verifica se o usuário clicou fora da janela enquanto a mensagem de vencedor está sendo exibida
+                        if mostrando_vencedor:
+                            if event.type == pygame.MOUSEBUTTONDOWN:
+                                mostrando_vencedor = False
+
             #---------------------------------------------------
         #--------------------------------------------------
             pygame.display.flip() # atualiza apenas uma porção do ecrã
