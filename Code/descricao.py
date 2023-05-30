@@ -22,7 +22,8 @@ class Regras:
         cor_texto = '#000000'
 
         # Define as fontes
-        fonte_texto = pygame.font.SysFont('romansd', 25)
+        fonte_path4 = os.path.join('Fonts','roman_sd', 'Roman SD.ttf')
+        fonte_texto = pygame.font.Font(fonte_path4, 25)
     #---------------------------------------------------------------
 
     #------------------------DESIGN-DE-BOTÃO------------------------

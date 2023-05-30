@@ -17,9 +17,12 @@ class Settings:
     #---------------------DESIGN-DAS-DEFINIÇÕES----------------------
         cor_texto = '#000000'
         cor_texto_telasub = '#ffffff'
-        fonte_opcoes_definicoes = pygame.font.SysFont('romansd', 25)
-        fonte_opcoes_musica = pygame.font.SysFont('romansd', 22)
-        fonte_titulo_definicoes = pygame.font.SysFont('romansd', 40)
+
+        # Adiciona as fontes e os caminhos
+        fonte4_path= os.path.join('Fonts', 'roman_sd', 'Roman SD.ttf')
+        fonte_opcoes_definicoes = pygame.font.Font(fonte4_path, 25)
+        fonte_opcoes_musica = pygame.font.Font(fonte4_path, 22)
+        fonte_titulo_definicoes = pygame.font.Font(fonte4_path, 40)
 
         titulo = fonte_titulo_definicoes.render("Definições", True, cor_texto_telasub)
 

@@ -7,7 +7,7 @@ class Jogarbot:
     def jogar_bot(janela, largura_janela, altura_janela):
     #---------------------IMAGENS---------------------
         # Cria a imagem de fundo da nova ronda
-        imagem_fundo3 = pygame.image.load(os.path.join('images', 'FUNDOJOGO.png'))
+        imagem_fundo3 = pygame.image.load(os.path.join('images', 'FUNDOJOGOBOT.png'))
         # Redimensiona a imagem
         imagem_fundo3 = pygame.transform.smoothscale(imagem_fundo3, (largura_janela, altura_janela))
         # Desenha a imagem de fundo na tela de jogadores
@@ -26,11 +26,8 @@ class Jogarbot:
         fonte_path = os.path.join('Fonts','roman_sd', 'Roman SD.ttf')
         fonte_texto = pygame.font.Font(fonte_path, 25)
         
-        cpu_nome = fonte_texto.render('CPU', True, cor_texto2)
     #---------------------VARIÁVEIS-PARA-JOGADOR---------------------
         # Vai guardar o nome do jogador
-        jogador_coords = [(largura_janela // 10, altura_janela // 3.6), (largura_janela // 1.46, altura_janela // 3.6)]
-        cpu_coords = [(largura_janela // 1.3, altura_janela // 3.6), (largura_janela // 2, altura_janela // 3.6)]
         nome = ''
 
         # Cria o retângulo para inserir o nome
@@ -114,8 +111,6 @@ class Jogarbot:
             # Apresenta o texto escrito na tela
             nome_texto = fonte_texto.render(nome, True, cor_texto2)
             imagem_fundo3.blit(nome_texto, (input_box.x+5, input_box.y+5))
-            
-            imagem_fundo3.blit(cpu_nome, (input_box.x+1030, input_box.y+6))
 
             janela.blit(imagem_fundo3, (0,0))
             pygame.display.flip()

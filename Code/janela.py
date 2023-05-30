@@ -18,7 +18,8 @@ class Janela():
 
         #------------------------CORES/FONTES-----------------------
         cor_texto = '#ffffff'
-        fonte = pygame.font.SysFont('romansd', 40)
+        fonte4_path= os.path.join('Fonts', 'roman_sd', 'Roman SD.ttf')
+        fonte = pygame.font.Font(fonte4_path, 40)
         #-----------------------------------------------------------
 
         #---------------------DESIGN-DA-JANELA----------------------
