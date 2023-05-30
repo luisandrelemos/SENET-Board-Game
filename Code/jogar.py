@@ -4,6 +4,16 @@ import random
 from pygame import mixer
 
 class Jogar:
+    def movimento(i, imagens_pecas, casas_ocupadas, next_pos, next_casa, lancamento):
+        imagens_pecas[i], imagens_pecas[next_pos] = imagens_pecas[next_pos], imagens_pecas[i] # Muda a peça de index para depois no blit ser posta na posição correta
+
+        # Muda o index das casas ocupadas
+        casas_ocupadas[next_pos] = "Preto" if casas_ocupadas[i] == "Preto" else "Branco"
+        casas_ocupadas[i] = "Nao Ocupado" if next_casa == "Nao Ocupado" else "Preto" if next_casa == "Preto" else "Branco"
+        lancamento=False
+
+        return imagens_pecas, casas_ocupadas, lancamento
+
     def procura_block(casas_ocupadas, next_pos):
         block_index = []
         i = 0
@@ -96,9 +106,13 @@ class Jogar:
     #---------------------IMAGENS---------------------
         # Carrega a imagem de fundo de jogo
         imagem_fundo = pygame.image.load(os.path.join('images', 'JOGO.png'))
-        
         # Redimensiona a imagem
         imagem_fundo = pygame.transform.smoothscale(imagem_fundo, (largura_janela, altura_janela))
+
+        # Carrega a imagem do vencedor
+        imagem_vencedor = pygame.image.load(os.path.join('images', 'VENCEDOR.png'))
+        # Redimensiona a imagem
+        imagem_vencedor = pygame.transform.smoothscale(imagem_vencedor, (largura_janela, altura_janela))
 
         # Cria a imagem de fundo da tela dos jogadores
         imagem_fundo2 = pygame.image.load(os.path.join('images', 'FUNDOJOGO.png'))
@@ -447,12 +461,7 @@ class Jogar:
                                         if next_pos<=25:
                                             # Faz as peças andar casas
                                             if casas_ocupadas[i] != casas_ocupadas[next_pos]:
-                                                imagens_pecas[i], imagens_pecas[next_pos] = imagens_pecas[next_pos], imagens_pecas[i] # Muda a peça de index para depois no blit ser posta na posição correta
-
-                                                # Muda o index das casas ocupadas
-                                                casas_ocupadas[next_pos] = "Preto" if casas_ocupadas[i] == "Preto" else "Branco"
-                                                casas_ocupadas[i] = "Nao Ocupado" if next_casa == "Nao Ocupado" else "Preto" if next_casa == "Preto" else "Branco"
-                                                lancamento=False
+                                                imagens_pecas, casas_ocupadas, lancamento = Jogar.movimento(i, imagens_pecas, casas_ocupadas, next_pos, next_casa, lancamento)
 
                                         # Casas Especiais
                                         if 25<=i<30:
@@ -469,11 +478,7 @@ class Jogar:
                                                     imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento = Jogar.fora_tabuleiro(i, imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento)
 
                                                 else:
-                                                    imagens_pecas[i], imagens_pecas[next_pos] = imagens_pecas[next_pos], imagens_pecas[i]
-
-                                                    casas_ocupadas[next_pos] = "Preto" if casas_ocupadas[i] == "Preto" else "Branco"
-                                                    casas_ocupadas[i] = "Nao Ocupado" if next_casa == "Nao Ocupado" else "Preto" if next_casa == "Preto" else "Branco"
-                                                    lancamento=False
+                                                    imagens_pecas, casas_ocupadas, lancamento = Jogar.movimento(i, imagens_pecas, casas_ocupadas, next_pos, next_casa, lancamento)
 
                                             # Verifica se a peça vai para a casa 28
                                             if i==27 and num_paus==3: # Condição que apenas permite mover se se sair 3
@@ -493,6 +498,19 @@ class Jogar:
                                             lance = 1
                                     else:
                                         lance+=1
+
+            #-----------------------------------------------------
+            if fora_brancas == 35:
+                janela.blit(imagem_vencedor, (0, 0))
+                vencedor = fonte.render(f"{jogadores[0]}\"", True, cor_texto2)
+                vencedor_w = vencedor.get_width()
+                janela.blit(vencedor, ((largura_janela - vencedor_w)//2, altura_janela // 2))
+
+            if fora_pretas == 40:
+                janela.blit(imagem_vencedor, (0, 0))
+                vencedor = fonte.render(f"{jogadores[1]}\"", True, cor_texto2)
+                vencedor_w = vencedor.get_width()
+                janela.blit(vencedor, ((largura_janela - vencedor_w)//2, altura_janela // 2))
 
             #---------------------------------------------------
         #-----------------------------------------------
