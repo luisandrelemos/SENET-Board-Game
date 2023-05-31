@@ -116,9 +116,9 @@ class Menu:
 
                 # Adiciona as fontes e os caminhos
                 fonte4_path= os.path.join('Fonts', 'roman_sd', 'Roman SD.ttf')
-                fonte_opcoes_submenu = pygame.font.Font(fonte4_path, 25)
-                fonte_opcoes_submenu = pygame.font.Font(fonte4_path, 25)
-                fonte_titulo_submenu = pygame.font.Font(fonte4_path, 35)
+                fonte_opcoes_submenu = pygame.font.Font(fonte4_path, 29)
+                fonte_voltar_submenu = pygame.font.Font(fonte4_path, 25)
+                fonte_titulo_submenu = pygame.font.Font(fonte4_path, 40)
 
                 # Redimensiona as imagens dos botões para o tamanho desejado do submenu
                 largura_botao_submenu = 360
@@ -186,7 +186,7 @@ class Menu:
                     else:
                         janela.blit(imagem_botao_normal_voltar, botao_voltar)
 
-                    texto_voltar = fonte_opcoes_submenu.render('Voltar', True, cor_texto_submenu)
+                    texto_voltar = fonte_voltar_submenu.render('Voltar', True, cor_texto_submenu)
                     x_texto_voltar = botao_voltar.centerx - texto_voltar.get_width() // 2
                     y_texto_voltar = botao_voltar.centery - texto_voltar.get_height() // 2
                     janela.blit(texto_voltar, (x_texto_voltar, y_texto_voltar))

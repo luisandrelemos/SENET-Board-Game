@@ -15,8 +15,33 @@ class Jogarbot:
 
         return imagens_pecas, casas_ocupadas, lancamento
     
-    def procura_block(casas_ocupadas, next_pos):
+    def fora_tabuleiro_novo_index(start, peca, casas_ocupadas):
+        while start < len(casas_ocupadas):
+            if casas_ocupadas[start] != peca:
+                return start
+            start+=1
+        return None
 
+    # Função responsável pelas posiçoes das peças fora do tabuleiro
+    def fora_tabuleiro(i, imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento):
+        imagens_pecas[i] = pygame.transform.smoothscale(imagens_pecas[i], (50, 50))
+        if casas_ocupadas[i] == "Branco":
+            imagens_pecas[i], imagens_pecas[fora_brancas] = imagens_pecas[fora_brancas], imagens_pecas[i]
+            casas_ocupadas[i] = "Nao Ocupado"
+            casas_ocupadas[fora_brancas] = "Branco"
+            fora_brancas += 1
+            lancamento=False
+
+        elif casas_ocupadas[i] == "Preto":
+            imagens_pecas[i], imagens_pecas[fora_pretas] = imagens_pecas[fora_pretas], imagens_pecas[i]
+            casas_ocupadas[i] = "Nao Ocupado"
+            casas_ocupadas[fora_pretas] = "Preto"
+            fora_pretas += 1
+            lancamento=False
+
+        return imagens_pecas, casas_ocupadas, lancamento
+
+    def procura_block(casas_ocupadas, next_pos):
         block_index = []
         i = 0
 
@@ -28,7 +53,6 @@ class Jogarbot:
                     i += 1
 
                 end_index = i
-
                 block_index.append((start_index, end_index))
             i += 1
 
@@ -83,25 +107,6 @@ class Jogarbot:
         for _, img_pau in paus:
             imagem.blit(img_pau, (pos_x, pos_y))
             pos_x += 70
-
-    # Função responsável pelas posiçoes das peças fora do tabuleiro
-    def fora_tabuleiro(i, imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento):
-        imagens_pecas[i] = pygame.transform.smoothscale(imagens_pecas[i], (50, 50))
-        if casas_ocupadas[i] == "Branco":
-            imagens_pecas[i], imagens_pecas[fora_brancas] = imagens_pecas[fora_brancas], imagens_pecas[i]
-            casas_ocupadas[i] = "Nao Ocupado"
-            casas_ocupadas[fora_brancas] = "Branco"
-            fora_brancas += 1
-            lancamento=False
-
-        elif casas_ocupadas[i] == "Preto":
-            imagens_pecas[i], imagens_pecas[fora_pretas] = imagens_pecas[fora_pretas], imagens_pecas[i]
-            casas_ocupadas[i] = "Nao Ocupado"
-            casas_ocupadas[fora_pretas] = "Preto"
-            fora_pretas += 1
-            lancamento=False
-
-        return imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento
 
     def jogar_bot(janela, largura_janela, altura_janela):
     #---------------------IMAGENS---------------------
@@ -212,7 +217,7 @@ class Jogarbot:
 
     #---------------------FUNÇÕES-PARA-OS-PAUS----------------------
         # Escolhe a cor dos paus
-        paus, num_paus = Jogar.escolher_cores(pau_branco, pau_preto)
+        paus, num_paus = Jogarbot.escolher_cores(pau_branco, pau_preto)
     #--------------------------------------------------------------
     
     #------------------------TELA-JOGADORES------------------------
@@ -240,12 +245,12 @@ class Jogarbot:
                             if enter<1:
                                 if jogador_atual<=2:
                                     if jogador_atual == 1:
-                                        Jogar.desenhar_paus2(imagem_fundo3, paus)
+                                        Jogarbot.desenhar_paus2(imagem_fundo3, paus)
                                         paus1 = num_paus
                                     else:
                                         while paus1 == num_paus:
-                                            paus, num_paus = Jogar.escolher_cores(pau_branco, pau_preto)
-                                        Jogar.desenhar_paus3(janela, paus)
+                                            paus, num_paus = Jogarbot.escolher_cores(pau_branco, pau_preto)
+                                        Jogarbot.desenhar_paus3(janela, paus)
                                         paus2 = num_paus
                                         nome = "cpu"
 
@@ -292,7 +297,7 @@ class Jogarbot:
             pygame.display.flip()
     #--------------------------------------------------------
     # Desenha as paus na tela
-        Jogar.desenhar_paus(imagem_fundo, paus)
+        Jogarbot.desenhar_paus(imagem_fundo, paus)
         jogador_atual = 0
     #---------------------EXECUTA-JOGO---------------------
         while executando:
@@ -454,49 +459,39 @@ class Jogarbot:
                                     pieces.play()
                                     next_casa = casas_ocupadas[next_pos]
 
-                                    block = Jogar.procura_block(casas_ocupadas, next_pos)
+                                    if next_pos>=30:
+                                        block = Jogarbot.procura_block(casas_ocupadas, fora_brancas if casas_ocupadas[i]=="Branco" else fora_pretas)
+                                    else:
+                                        block = Jogarbot.procura_block(casas_ocupadas, next_pos)
+
                                     if not block:
-                                        if next_pos<=25:
+                                        if i<=25 and next_pos<=25:
                                             # Faz as peças andar casas
                                             if casas_ocupadas[i] != casas_ocupadas[next_pos]:
-                                                imagens_pecas[i], imagens_pecas[next_pos] = imagens_pecas[next_pos], imagens_pecas[i] # Muda a peça de index para depois no blit ser posta na posição correta
-
-                                                # Muda o index das casas ocupadas
-                                                casas_ocupadas[next_pos] = "Preto" if casas_ocupadas[i] == "Preto" else "Branco"
-                                                casas_ocupadas[i] = "Nao Ocupado" if next_casa == "Nao Ocupado" else "Preto" if next_casa == "Preto" else "Branco"
-                                                lancamento=False
+                                                imagens_pecas, casas_ocupadas, lancamento = Jogarbot.movimento(i, imagens_pecas, casas_ocupadas, next_pos, next_casa, lancamento)
 
                                         # Casas Especiais
-                                        if 25<=i<30:
-                                            # Verifica se a peça vai para a casa 27
-                                            if i==25 and next_pos == 26:
-                                                imagens_pecas[i], imagens_pecas[14] = imagens_pecas[14], imagens_pecas[i] # Transporta a peça para a casa 15
+                                        if i>=25:
+                                            if i==25:
+                                                if next_pos==26:
+                                                    imagens_pecas[i], imagens_pecas[14] = imagens_pecas[14], imagens_pecas[i] # Transporta a peça para a casa 15
 
-                                                casas_ocupadas[14] = "Preto" if casas_ocupadas[i] == "Preto" else "Branco"
-                                                casas_ocupadas[i] = "Nao Ocupado" if next_casa == "Nao Ocupado" else "Preto" if next_casa == "Preto" else "Branco"
-                                                lancamento=False
-
-                                            elif i==25 and next_pos>26:
-                                                if next_pos==30:
-                                                    imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento = Jogar.fora_tabuleiro(i, imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento)
-
-                                                else:
-                                                    imagens_pecas[i], imagens_pecas[next_pos] = imagens_pecas[next_pos], imagens_pecas[i]
-
-                                                    casas_ocupadas[next_pos] = "Preto" if casas_ocupadas[i] == "Preto" else "Branco"
+                                                    casas_ocupadas[14] = "Preto" if casas_ocupadas[i] == "Preto" else "Branco"
                                                     casas_ocupadas[i] = "Nao Ocupado" if next_casa == "Nao Ocupado" else "Preto" if next_casa == "Preto" else "Branco"
                                                     lancamento=False
 
-                                            # Verifica se a peça vai para a casa 28
-                                            if i==27 and num_paus==3: # Condição que apenas permite mover se se sair 3
-                                                imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento = Jogar.fora_tabuleiro(i, imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento)
+                                                if next_pos==30:
+                                                    imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento = Jogarbot.fora_tabuleiro(i, imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento)
 
-                                            # Verifica se a peça vai para a casa 29
-                                            elif i==28 and num_paus==2: # Condição que apenas permite mover se se sair 2
-                                                imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento = Jogar.fora_tabuleiro(i, imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento)
+                                                if next_pos not in [26, 30]:
+                                                    imagens_pecas, casas_ocupadas, lancamento = Jogarbot.movimento(i, imagens_pecas, casas_ocupadas, next_pos, next_casa, lancamento)
 
-                                            elif i==29:
-                                                imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento = Jogar.fora_tabuleiro(i, imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento)
+                                            if i in [27, 28]:
+                                                if next_pos==30:
+                                                    imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento = Jogarbot.fora_tabuleiro(i, imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento)
+
+                                            if i==29:
+                                                imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento = Jogarbot.fora_tabuleiro(i, imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento)
 
                                     # Muda de Jogador
                                     if lance!=1:
@@ -506,6 +501,9 @@ class Jogarbot:
                                     else:
                                         lance+=1
 
+        #---------------------------------------------------------
+
+        #---------------------TELA-DE-VITÓRIA---------------------
             # Verifica se houve vitória das brancas
             if fora_brancas == 35:
                 vitoria_brancas = True
@@ -515,6 +513,9 @@ class Jogarbot:
                 vitoria_pretas = True
 
             if vitoria_brancas:
+                option_sound = mixer.Sound(os.path.join('sounds', 'victory.mp3'))
+                option_sound.set_volume(0.4) # Define o volume para 40%
+                option_sound.play()
                 janela.blit(imagem_vencedor, (0, 0))
                 vencedor = fonte.render(f"{jogadores[0][0]}", True, cor_texto2)
                 vencedor_w = vencedor.get_width()
@@ -530,6 +531,9 @@ class Jogarbot:
                             return
 
             if vitoria_pretas:
+                option_sound = mixer.Sound(os.path.join('sounds', 'victory.mp3'))
+                option_sound.set_volume(0.4) # Define o volume para 40%
+                option_sound.play()
                 janela.blit(imagem_vencedor, (0, 0))
                 vencedor = fonte.render(f"{jogadores[1][0]}", True, cor_texto2)
                 vencedor_w = vencedor.get_width()
