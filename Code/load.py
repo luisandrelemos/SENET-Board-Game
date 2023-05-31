@@ -25,13 +25,13 @@ class Jogar_load:
     def fora_tabuleiro(i, imagens_pecas, casas_ocupadas, lancamento):
         imagens_pecas[i] = pygame.transform.smoothscale(imagens_pecas[i], (50, 50))
         if casas_ocupadas[i] == "Branco":
-            destino = Jogar.fora_tabuleiro_novo_index(30, "Branco", casas_ocupadas)
+            destino = Jogar_load.fora_tabuleiro_novo_index(30, "Branco", casas_ocupadas)
             casas_ocupadas[i], casas_ocupadas[destino] = casas_ocupadas[destino], casas_ocupadas[i]
             imagens_pecas[i], imagens_pecas[destino] = imagens_pecas[destino], imagens_pecas[i]
             lancamento = False
 
         elif casas_ocupadas[i] == "Preto":
-            destino = Jogar.fora_tabuleiro_novo_index(40, "Preto", casas_ocupadas)
+            destino = Jogar_load.fora_tabuleiro_novo_index(40, "Preto", casas_ocupadas)
             casas_ocupadas[i], casas_ocupadas[destino] = casas_ocupadas[destino], casas_ocupadas[i]
             imagens_pecas[i], imagens_pecas[destino] = imagens_pecas[destino], imagens_pecas[i]
             lancamento = False
@@ -411,9 +411,9 @@ class Jogar_load:
                                     next_casa = casas_ocupadas[next_pos]
 
                                     if next_pos>=30:
-                                        block = Jogar.procura_block(casas_ocupadas, fora_brancas if casas_ocupadas[i]=="Branco" else fora_pretas)
+                                        block = Jogar_load.procura_block(casas_ocupadas, fora_brancas if casas_ocupadas[i]=="Branco" else fora_pretas)
                                     else:
-                                        block = Jogar.procura_block(casas_ocupadas, next_pos)
+                                        block = Jogar_load.procura_block(casas_ocupadas, next_pos)
 
                                     if not block:
                                         if i<=25 and next_pos<=25:
@@ -432,17 +432,17 @@ class Jogar_load:
                                                     lancamento=False
 
                                                 if next_pos==30:
-                                                    imagens_pecas, casas_ocupadas, lancamento = Jogar_load.fora_tabuleiro(i, imagens_pecas, casas_ocupadas, lancamento)
+                                                    imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento = Jogar_load.fora_tabuleiro(i, imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento)
 
                                                 if next_pos not in [26, 30]:
                                                     imagens_pecas, casas_ocupadas, lancamento = Jogar_load.movimento(i, imagens_pecas, casas_ocupadas, next_pos, next_casa, lancamento)
 
                                             if i in [27, 28]:
                                                 if next_pos==30:
-                                                    imagens_pecas, casas_ocupadas, lancamento = Jogar_load.fora_tabuleiro(i, imagens_pecas, casas_ocupadas, lancamento)
+                                                    imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento = Jogar_load.fora_tabuleiro(i, imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento)
 
                                             if i==29:
-                                                imagens_pecas, casas_ocupadas, lancamento = Jogar_load.fora_tabuleiro(i, imagens_pecas, casas_ocupadas, lancamento)
+                                                imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento = Jogar_load.fora_tabuleiro(i, imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento)
 
                                         # Muda de Jogador
                                         if lance!=1:
