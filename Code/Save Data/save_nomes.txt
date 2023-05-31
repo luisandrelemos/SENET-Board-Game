@@ -1,2 +1,2 @@
-ola, Branco
-adeus, Preto
+BRANCA, Branco
+PRETA, Preto

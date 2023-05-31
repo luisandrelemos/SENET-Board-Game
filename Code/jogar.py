@@ -14,15 +14,39 @@ class Jogar:
 
         return imagens_pecas, casas_ocupadas, lancamento
 
+    def fora_tabuleiro_novo_index(start, peca, casas_ocupadas):
+        while start < len(casas_ocupadas):
+            if casas_ocupadas[start] != peca:
+                return start
+            start+=1
+        return None
+
+    # Função responsável pelas posiçoes das peças fora do tabuleiro
+    def fora_tabuleiro(i, imagens_pecas, casas_ocupadas, lancamento):
+        imagens_pecas[i] = pygame.transform.smoothscale(imagens_pecas[i], (50, 50))
+        if casas_ocupadas[i] == "Branco":
+            destino = Jogar.fora_tabuleiro_novo_index(30, "Branco", casas_ocupadas)
+            casas_ocupadas[i], casas_ocupadas[destino] = casas_ocupadas[destino], casas_ocupadas[i]
+            imagens_pecas[i], imagens_pecas[destino] = imagens_pecas[destino], imagens_pecas[i]
+            lancamento = False
+
+        elif casas_ocupadas[i] == "Preto":
+            destino = Jogar.fora_tabuleiro_novo_index(40, "Preto", casas_ocupadas)
+            casas_ocupadas[i], casas_ocupadas[destino] = casas_ocupadas[destino], casas_ocupadas[i]
+            imagens_pecas[i], imagens_pecas[destino] = imagens_pecas[destino], imagens_pecas[i]
+            lancamento = False
+
+        return imagens_pecas, casas_ocupadas, lancamento
+
     def procura_block(casas_ocupadas, next_pos):
         block_index = []
         i = 0
 
         while i < len(casas_ocupadas) - 1:
-            if casas_ocupadas[i] == casas_ocupadas[i+1]and casas_ocupadas[i]!="Nao Ocupado" and casas_ocupadas[i+1]!="Nao Ocupado":
+            if casas_ocupadas[i] == casas_ocupadas[i+1] and casas_ocupadas[i]!="Nao Ocupado" and casas_ocupadas[i+1]!="Nao Ocupado":
                 start_index = i
 
-                while i+1 < len(casas_ocupadas) and casas_ocupadas[i] == casas_ocupadas[i+1]: # and casas_ocupadas[i]!="Nao Ocupado":
+                while i+1 < len(casas_ocupadas) and casas_ocupadas[i] == casas_ocupadas[i+1]:
                     i += 1
 
                 end_index = i
@@ -82,25 +106,6 @@ class Jogar:
             imagem.blit(img_pau, (pos_x, pos_y))
             pos_x += 70
 
-    # Função responsável pelas posiçoes das peças fora do tabuleiro
-    def fora_tabuleiro(i, imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento):
-        imagens_pecas[i] = pygame.transform.smoothscale(imagens_pecas[i], (50, 50))
-        if casas_ocupadas[i] == "Branco":
-            imagens_pecas[i], imagens_pecas[fora_brancas] = imagens_pecas[fora_brancas], imagens_pecas[i]
-            casas_ocupadas[i] = "Nao Ocupado"
-            casas_ocupadas[fora_brancas] = "Branco"
-            fora_brancas += 1
-            lancamento=False
-
-        elif casas_ocupadas[i] == "Preto":
-            imagens_pecas[i], imagens_pecas[fora_pretas] = imagens_pecas[fora_pretas], imagens_pecas[i]
-            casas_ocupadas[i] = "Nao Ocupado"
-            casas_ocupadas[fora_pretas] = "Preto"
-            fora_pretas += 1
-            lancamento=False
-
-        return imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento
-
     # Função responsável pelo jogo no geral
     def jogar_partida(janela, largura_janela, altura_janela):
     #---------------------IMAGENS---------------------
@@ -121,7 +126,7 @@ class Jogar:
 
         # Carrega as imagens das peças
         pecas = ['WHITE1', 'BLACK1', 'WHITE2', 'BLACK2', 'WHITE3', 'BLACK3', 'WHITE4', 'BLACK4', 'WHITE5', 'BLACK5']
-        imagens_pecas = [pygame.image.load(os.path.join('Images', 'Peças', p + '.png')) for p in pecas]
+        imagens_pecas = [pygame.image.load(os.path.join('images', 'Peças', p + '.png')) for p in pecas]
 
         # Redimensiona as imagens
         tamanho_novo = imagens_pecas[0].get_width() // 1.45, imagens_pecas[0].get_height() // 1.45
@@ -139,7 +144,7 @@ class Jogar:
                           
                           (50, 150), (110, 150), (20, 210), (80, 210), (140, 210),
                           (1370, 150), (1430, 150), (1340, 210), (1400, 210), (1460, 210)]
-
+        
         casas_ocupadas = ["Branco", "Preto"] * 5 + ["Nao Ocupado"] * 30
 
         # Carregue as imagens dos paus
@@ -189,6 +194,8 @@ class Jogar:
         players = True # Tela dos Nomes
         executando = True # Tela de Jogo
         pausado = False # Tela de Pausa
+
+        next_pos = 0
        
         box_ativado = False # Controla a cor da caixa de input do nome
         enter = 0 # Usada para controlar as coordenadas da box
@@ -265,15 +272,11 @@ class Jogar:
 
                 if len(jogadores)==2:
                     if paus1>paus2:
-                        j = jogadores.pop(0)
-                        jogadores.insert(0, (j, "Branco"))
-                        j = jogadores.pop(1)
-                        jogadores.insert(1, (j, "Preto"))
+                        jogadores[0] = (jogadores[0], "Branco")
+                        jogadores[1] = (jogadores[1], "Preto")
                     else:
-                        j = jogadores.pop(1)
-                        jogadores.insert(0, (j, "Preto"))
-                        j = jogadores.pop(1)
-                        jogadores.insert(1, (j, "Branco"))
+                        jogadores[0] = (jogadores[0], "Preto")
+                        jogadores[1] = (jogadores[1], "Branco")
 
                 # Fecha a tela após o limite de jogadores ser atingido
                 if jogador_atual==3:
@@ -296,13 +299,14 @@ class Jogar:
         # Desenha as paus na tela
         Jogar.desenhar_paus(imagem_fundo, paus)
         jogador_atual = 0
+
     #---------------------EXECUTA-JOGO---------------------
         while executando:
         #---------------------VERIFICA-EVENTOS-PARA-A-TELA DE-PAUSA---------------------
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
-                elif event.type == pygame.KEYDOWN:
+                if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         if not pausado:
                             # Pausa o jogo
@@ -310,7 +314,7 @@ class Jogar:
                         else:
                             # Retorna ao jogo
                             pausado = False
-                elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.type == pygame.MOUSEBUTTONDOWN:
                     option_sound = mixer.Sound(os.path.join('sounds', 'option.mp3'))
                     option_sound.set_volume(0.4) # Define o volume para 40%
                     option_sound.play()
@@ -327,12 +331,13 @@ class Jogar:
                                         for casas in casas_ocupadas:
                                             save.write(casas + '\n')
                                     with open('Code\Save Data\save_turnojogador.txt', 'w') as save:
-                                            save.write(str(jogadores[jogador_atual]))
-                                    with open('Code\Save Data\save_paus.txt', 'w') as save:
-                                            save.write(str(paus))
+                                        save.write(str(jogadores[jogador_atual]))
                                     with open('Code\Save Data\save_nomes.txt', 'w') as save:
-                                            for jogador in jogadores:
-                                                save.write(f"{jogador[0]}, {jogador[1]}\n")
+                                        for jogador in jogadores:
+                                            save.write(f"{jogador[0]}, {jogador[1]}\n")
+                                    with open('Code\Save Data\index.txt', 'w') as save:
+                                        save.write(str(fora_brancas) + '\n')
+                                        save.write(fora_pretas)
                                 elif opcao == 'Menu':
                                     # retorna ao menu principal
                                     return
@@ -394,7 +399,7 @@ class Jogar:
                             pygame.draw.rect(peca_hover, (0, 0, 0, 55), peca_hover.get_rect(), border_radius=5)
                             janela.blit(peca_hover, (posicao[0]-5, posicao[1]-6))
 
-                if pygame.Rect((645, 660), tamanho_paus). collidepoint(pygame.mouse.get_pos()):
+                if pygame.Rect((645, 660), tamanho_paus).collidepoint(pygame.mouse.get_pos()):
                     paus_hover = pygame.Surface((250, 150), pygame.SRCALPHA)
                     pygame.draw.rect(paus_hover, (255, 255, 255, 55), paus_hover.get_rect(), border_radius=5)
                     janela.blit(paus_hover, (640, 655))
@@ -456,7 +461,13 @@ class Jogar:
                                     pieces.play()
                                     next_casa = casas_ocupadas[next_pos]
 
-                                    block = Jogar.procura_block(casas_ocupadas, next_pos)
+                                    if next_pos>=30:
+                                        if casas_ocupadas[i]=="Branco":
+                                            block = Jogar.procura_block(casas_ocupadas, fora_brancas)
+                                        elif casas_ocupadas[i]=="Preto":
+                                            block = Jogar.procura_block(casas_ocupadas, fora_pretas)
+                                    else:
+                                        block = Jogar.procura_block(casas_ocupadas, next_pos)
                                     if not block:
                                         if next_pos<=25:
                                             # Faz as peças andar casas
@@ -466,14 +477,14 @@ class Jogar:
                                         # Casas Especiais
                                         if 25<=i<30:
                                             # Verifica se a peça vai para a casa 27
-                                            if i==25 and next_pos == 26:
-                                                imagens_pecas[i], imagens_pecas[14] = imagens_pecas[14], imagens_pecas[i] # Transporta a peça para a casa 15
+                                            if i==25:
+                                                if next_pos==26:
+                                                    imagens_pecas[i], imagens_pecas[14] = imagens_pecas[14], imagens_pecas[i] # Transporta a peça para a casa 15
 
-                                                casas_ocupadas[14] = "Preto" if casas_ocupadas[i] == "Preto" else "Branco"
-                                                casas_ocupadas[i] = "Nao Ocupado" if next_casa == "Nao Ocupado" else "Preto" if next_casa == "Preto" else "Branco"
-                                                lancamento=False
+                                                    casas_ocupadas[14] = "Preto" if casas_ocupadas[i] == "Preto" else "Branco"
+                                                    casas_ocupadas[i] = "Nao Ocupado" if next_casa == "Nao Ocupado" else "Preto" if next_casa == "Preto" else "Branco"
+                                                    lancamento=False
 
-                                            elif i==25 and next_pos>26:
                                                 if next_pos==30:
                                                     imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento = Jogar.fora_tabuleiro(i, imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento)
 
@@ -481,14 +492,16 @@ class Jogar:
                                                     imagens_pecas, casas_ocupadas, lancamento = Jogar.movimento(i, imagens_pecas, casas_ocupadas, next_pos, next_casa, lancamento)
 
                                             # Verifica se a peça vai para a casa 28
-                                            if i==27 and num_paus==3: # Condição que apenas permite mover se se sair 3
-                                                imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento = Jogar.fora_tabuleiro(i, imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento)
+                                            if i==27:
+                                                if num_paus==3: # Condição que apenas permite mover se se sair 3
+                                                    imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento = Jogar.fora_tabuleiro(i, imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento)
 
                                             # Verifica se a peça vai para a casa 29
-                                            elif i==28 and num_paus==2: # Condição que apenas permite mover se se sair 2
-                                                imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento = Jogar.fora_tabuleiro(i, imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento)
+                                            if i==28: 
+                                                if num_paus==2: # Condição que apenas permite mover se se sair 2
+                                                    imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento = Jogar.fora_tabuleiro(i, imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento)
 
-                                            elif i==29:
+                                            if i==29:
                                                 imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento = Jogar.fora_tabuleiro(i, imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento)
 
                                     # Muda de Jogador
@@ -499,20 +512,20 @@ class Jogar:
                                     else:
                                         lance+=1
 
-            #-----------------------------------------------------
-            if fora_brancas == 35:
+        #---------------------------------------------------
+
+        #---------------------TELA-DE-VITÓRIA---------------------
+            if fora_brancas==35:
                 janela.blit(imagem_vencedor, (0, 0))
                 vencedor = fonte.render(f"{jogadores[0]}\"", True, cor_texto2)
                 vencedor_w = vencedor.get_width()
                 janela.blit(vencedor, ((largura_janela - vencedor_w)//2, altura_janela // 2))
 
-            if fora_pretas == 40:
+            if fora_pretas==40:
                 janela.blit(imagem_vencedor, (0, 0))
                 vencedor = fonte.render(f"{jogadores[1]}\"", True, cor_texto2)
                 vencedor_w = vencedor.get_width()
                 janela.blit(vencedor, ((largura_janela - vencedor_w)//2, altura_janela // 2))
-
-            #---------------------------------------------------
-        #-----------------------------------------------
+        #---------------------------------------------------------
             pygame.display.flip() # atualiza apenas uma porção do ecrã
     #------------------------------------------------------

@@ -176,8 +176,8 @@ class Jogarbot:
     #---------------------VARIÁVEIS-PARA-JOGADOR---------------------
         # Vai guardar o nome do jogador
         jogadores = []
-        
         nome = ''
+        
 
         # Cria o retângulo para inserir o nome
         box_coords = (160, 235) # Coordenadas do retângulo
@@ -230,11 +230,9 @@ class Jogarbot:
                         type_sound.play()
                         if event.key == pygame.K_BACKSPACE:
                             nome = nome[:-1]#retira o ultimo item da lista
-
                         if event.key == pygame.K_RETURN:
                             if enter<1:
                                 if jogador_atual<=2:
-                                     
                                     if jogador_atual == 1:
                                         Jogar.desenhar_paus2(imagem_fundo3, paus)
                                         paus1 = num_paus
@@ -243,13 +241,12 @@ class Jogarbot:
                                             paus, num_paus = Jogar.escolher_cores(pau_branco, pau_preto)
                                         Jogar.desenhar_paus3(janela, paus)
                                         paus2 = num_paus
+                                        nome = "cpu"
 
                             jogadores.append(nome)
                             box_ativado = True # ativa a box
                             jogador_atual += 1
-                            nome = "cpu"
-                            jogadores.append(nome)
-
+                            
                         tecla = event.unicode
                         if tecla.isalpha() or tecla.isdigit() or tecla ==' ': # Verifica se o caracter é alfanumérico
                             nome += tecla # Adiciona o caracter ao nome
