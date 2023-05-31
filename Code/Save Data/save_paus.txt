@@ -1,0 +1,1 @@
+[('BLACK', <Surface(30x140x32, global_alpha=255)>), ('WHITE', <Surface(30x140x32, global_alpha=255)>), ('BLACK', <Surface(30x140x32, global_alpha=255)>), ('WHITE', <Surface(30x140x32, global_alpha=255)>)]
