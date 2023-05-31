@@ -200,7 +200,6 @@ class Jogar:
         jogador_atual = 1 # Verifica o jogador atual
         lance = 1 # Verifica quantos lances foram feitos
         lancamento = False # Verifica se o jogador já lançou
-        contador = 0
     
         # Usadas para os paus de iniciais de cada jogador
         paus1 = 0
@@ -393,7 +392,7 @@ class Jogar:
                 for i, posicao in enumerate(posicoes_casas):
                     if casas_ocupadas[i] in ["Branco", "Preto"] and i<30:
                         # Indica que o rato está sob a peça
-                        if pygame.Rect(posicao, tamanho_novo).collidepoint(pygame.mouse.get_pos()):
+                        if pygame.Rect(posicao, tamanho_novo).collidepoint(pygame.mouse.get_pos()) and casas_ocupadas[i]==jogadores[jogador_atual][1]:
                             peca_hover = pygame.Surface((80,85), pygame.SRCALPHA)
                             pygame.draw.rect(peca_hover, (0, 0, 0, 55), peca_hover.get_rect(), border_radius=5)
                             janela.blit(peca_hover, (posicao[0]-5, posicao[1]-6))
@@ -460,11 +459,6 @@ class Jogar:
                                     pieces.play()
                                     next_casa = casas_ocupadas[next_pos]
 
-                                    for index, ocurrencias in enumerate(casas_ocupadas):
-                                        if index<30:
-                                            if ocurrencias == jogadores[jogador_atual][1]:
-                                                contador+=1
-
                                     if next_pos>=30:
                                         block = Jogar.procura_block(casas_ocupadas, fora_brancas if casas_ocupadas[i]=="Branco" else fora_pretas)
                                     else:
@@ -496,7 +490,7 @@ class Jogar:
                                                 if next_pos==30:
                                                     imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento = Jogar.fora_tabuleiro(i, imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento)
 
-                                                elif contador==1:
+                                                else:
                                                     jogador_atual = jogador_atual + 1 if jogador_atual==0 else jogador_atual - 1
                                                     lance = 1
                                                     contador = 0
