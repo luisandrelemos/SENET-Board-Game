@@ -1,1 +1,1 @@
-('BRANCA', 'Branco')
+('lemos', 'Preto')

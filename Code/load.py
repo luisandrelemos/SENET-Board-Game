@@ -172,11 +172,15 @@ class Jogar_load:
         jogadores = []
     #----------------------------------------------------------------
 
-    #---------------------Variáveis-de-Controlo----------------------
+    #---------------------Variáveis-de-Controlo---------------------
         # Controlam telas
         players = True # Tela dos Nomes
         executando = True # Tela de Jogo
         pausado = False # Tela de Pausa
+
+        # Variáveis de controle
+        vitoria_brancas = False
+        vitoria_pretas = False
 
         jogador_atual = 1 # Verifica o jogador atual
         lance = 1 # Verifica quantos lances foram feitos
@@ -219,6 +223,11 @@ class Jogar_load:
                 jogador, peca = player.split(',')
                 peca = peca.replace(" ", "")
                 jogadores.append((jogador, peca))
+        
+        with open('Code\Save Data\index.txt', 'r') as load:
+            index = load.readlines()
+            fora_brancas = int(index[0])
+            fora_pretas = int(index[1])
 
         # Posiciona as peças de acordo com as casas ocupadas
         for i in range(len(casas_ocupadas)):
@@ -235,8 +244,6 @@ class Jogar_load:
             else:
                 imagens_pecas.append(None)
 
-        print(white)
-        print(black)
         for i, jogador in enumerate(jogadores):
             if turno == jogador:
                 jogador_atual = i
@@ -273,12 +280,16 @@ class Jogar_load:
                                         for casas in casas_ocupadas:
                                             save.write(casas + '\n')
                                     with open('Code\Save Data\save_turnojogador.txt', 'w') as save:
-                                            save.write(str(jogadores[jogador_atual]))
+                                        save.write(str(jogadores[jogador_atual]))
                                     with open('Code\Save Data\save_paus.txt', 'w') as save:
-                                            save.write(str(paus))
+                                        save.write(str(paus))
                                     with open('Code\Save Data\save_nomes.txt', 'w') as save:
-                                            for jogador in jogadores:
-                                                save.write(f"{jogador[0]}, {jogador[1]}\n")
+                                        for jogador in jogadores:
+                                            save.write(f"{jogador[0]}, {jogador[1]}\n")
+                                    with open('Code\Save Data\index.txt', 'w') as save:
+                                        save.write(str(fora_brancas))
+                                        save.write('\n')
+                                        save.write(str(fora_pretas))
                                 elif opcao == 'Menu':
                                     # retorna ao menu principal
                                     return
@@ -287,7 +298,7 @@ class Jogar_load:
                                     quit()
         #-------------------------------------------------------------------------------
 
-        #---------------------BLIT-DE-IMAGENS---------------------
+        #---------------------BLIT---------------------
             janela.blit(imagem_fundo, (0, 0))
             # Exibir turno do jogador atual
             texto_turno = fonte.render(f"Turno de \"{jogadores[jogador_atual][0]}\"", True, cor_texto2)
@@ -297,7 +308,7 @@ class Jogar_load:
             for i, img in enumerate(imagens_pecas):
                 if img != None:
                     janela.blit(img, posicoes_casas[i])
-        #---------------------------------------------------------
+        #----------------------------------------------
 
         #---------------------PAUSA---------------------
             if pausado:
@@ -402,7 +413,13 @@ class Jogar_load:
                                     pieces.play()
                                     next_casa = casas_ocupadas[next_pos]
 
-                                    block = Jogar_load.procura_block(casas_ocupadas, next_pos)
+                                    if next_pos>=30:
+                                        if casas_ocupadas[i]=="Branco":
+                                            block = Jogar_load.procura_block(casas_ocupadas, fora_brancas)
+                                        elif casas_ocupadas[i]=="Preto":
+                                            block = Jogar_load.procura_block(casas_ocupadas, fora_pretas)
+                                    else:
+                                        block = Jogar_load.procura_block(casas_ocupadas, next_pos)
                                     if not block:
                                         if next_pos<=25:
                                             # Faz as peças andar casas
@@ -412,14 +429,14 @@ class Jogar_load:
                                         # Casas Especiais
                                         if 25<=i<30:
                                             # Verifica se a peça vai para a casa 27
-                                            if i==25 and next_pos == 26:
-                                                imagens_pecas[i], imagens_pecas[14] = imagens_pecas[14], imagens_pecas[i] # Transporta a peça para a casa 15
+                                            if i==25:
+                                                if next_pos==26:
+                                                    imagens_pecas[i], imagens_pecas[14] = imagens_pecas[14], imagens_pecas[i] # Transporta a peça para a casa 15
 
-                                                casas_ocupadas[14] = "Preto" if casas_ocupadas[i] == "Preto" else "Branco"
-                                                casas_ocupadas[i] = "Nao Ocupado" if next_casa == "Nao Ocupado" else "Preto" if next_casa == "Preto" else "Branco"
-                                                lancamento=False
+                                                    casas_ocupadas[14] = "Preto" if casas_ocupadas[i] == "Preto" else "Branco"
+                                                    casas_ocupadas[i] = "Nao Ocupado" if next_casa == "Nao Ocupado" else "Preto" if next_casa == "Preto" else "Branco"
+                                                    lancamento=False
 
-                                            elif i==25 and next_pos>26:
                                                 if next_pos==30:
                                                     imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento = Jogar_load.fora_tabuleiro(i, imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento)
 
@@ -427,14 +444,16 @@ class Jogar_load:
                                                     imagens_pecas, casas_ocupadas, lancamento = Jogar_load.movimento(i, imagens_pecas, casas_ocupadas, next_pos, next_casa, lancamento)
 
                                             # Verifica se a peça vai para a casa 28
-                                            if i==27 and num_paus==3: # Condição que apenas permite mover se se sair 3
-                                                imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento = Jogar_load.fora_tabuleiro(i, imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento)
+                                            if i==27:
+                                                if num_paus==3: # Condição que apenas permite mover se se sair 3
+                                                    imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento = Jogar_load.fora_tabuleiro(i, imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento)
 
                                             # Verifica se a peça vai para a casa 29
-                                            elif i==28 and num_paus==2: # Condição que apenas permite mover se se sair 2
-                                                imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento = Jogar_load.fora_tabuleiro(i, imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento)
+                                            if i==28: 
+                                                if num_paus==2: # Condição que apenas permite mover se se sair 2
+                                                    imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento = Jogar_load.fora_tabuleiro(i, imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento)
 
-                                            elif i==29:
+                                            if i==29:
                                                 imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento = Jogar_load.fora_tabuleiro(i, imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento)
 
                                     # Muda de Jogador
@@ -445,20 +464,46 @@ class Jogar_load:
                                     else:
                                         lance+=1
 
-            #-----------------------------------------------------
+        #---------------------------------------------------
+
+        #---------------------TELA-DE-VITÓRIA---------------------
+            # Verifica se houve vitória das brancas
             if fora_brancas == 35:
-                janela.blit(imagem_vencedor, (0, 0))
-                vencedor = fonte.render(f"{jogadores[0]}\"", True, cor_texto2)
-                vencedor_w = vencedor.get_width()
-                janela.blit(vencedor, ((largura_janela - vencedor_w)//2, altura_janela // 2))
+                vitoria_brancas = True
 
+            # Verifica se houve vitória das pretas
             if fora_pretas == 40:
-                janela.blit(imagem_vencedor, (0, 0))
-                vencedor = fonte.render(f"{jogadores[1]}\"", True, cor_texto2)
-                vencedor_w = vencedor.get_width()
-                janela.blit(vencedor, ((largura_janela - vencedor_w)//2, altura_janela // 2))
+                vitoria_pretas = True
 
-            #-----------------------------------------------------
-        #--------------------------------------------------
+            if vitoria_brancas:
+                janela.blit(imagem_vencedor, (0, 0))
+                vencedor = fonte.render(f"{jogadores[0][0]}", True, cor_texto2)
+                vencedor_w = vencedor.get_width()
+                janela.blit(vencedor, ((largura_janela - vencedor_w) // 2, altura_janela // 2 - 70))
+                pygame.display.flip()
+
+                while True:
+                    for event in pygame.event.get():
+                        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                            option_sound = mixer.Sound(os.path.join('sounds', 'option.mp3'))
+                            option_sound.set_volume(0.4) # Define o volume para 40%
+                            option_sound.play()
+                            return
+
+            if vitoria_pretas:
+                janela.blit(imagem_vencedor, (0, 0))
+                vencedor = fonte.render(f"{jogadores[1][0]}", True, cor_texto2)
+                vencedor_w = vencedor.get_width()
+                janela.blit(vencedor, ((largura_janela - vencedor_w) // 2, altura_janela // 2 - 70))
+                pygame.display.flip()
+
+                while True:
+                    for event in pygame.event.get():
+                        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                            option_sound = mixer.Sound(os.path.join('sounds', 'option.mp3'))
+                            option_sound.set_volume(0.4) # Define o volume para 40%
+                            option_sound.play()
+                            return
+                    #---------------------------------------------------------
             pygame.display.flip() # atualiza apenas uma porção do ecrã
     #------------------------------------------------------

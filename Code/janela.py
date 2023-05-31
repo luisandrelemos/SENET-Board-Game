@@ -1,6 +1,7 @@
 import pygame
 import time
 import os
+import random
 from pygame import mixer
 
 class Janela():

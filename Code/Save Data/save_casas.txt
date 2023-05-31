@@ -21,20 +21,20 @@ Nao Ocupado
 Nao Ocupado
 Nao Ocupado
 Nao Ocupado
-Preto
-Nao Ocupado
-Preto
-Nao Ocupado
-Branco
-Branco
-Nao Ocupado
-Branco
-Branco
 Branco
 Nao Ocupado
 Nao Ocupado
-Preto
-Preto
-Preto
 Nao Ocupado
+Nao Ocupado
+Nao Ocupado
+Preto
+Branco
+Branco
+Branco
+Branco
+Nao Ocupado
+Preto
+Preto
+Preto
+Preto
 Nao Ocupado

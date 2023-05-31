@@ -1,2 +1,2 @@
-BRANCA, Branco
-PRETA, Preto
+luis, Branco
+lemos, Preto
