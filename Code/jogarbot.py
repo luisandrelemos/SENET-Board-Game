@@ -236,25 +236,23 @@ class Jogarbot:
                         type_sound.play()
                         if event.key == pygame.K_BACKSPACE:
                             nome = nome[:-1]#retira o ultimo item da lista
-
                         if event.key == pygame.K_RETURN:
                             if enter<1:
-                                enter += 1
-
-                            if jogador_atual<=2: 
-                                if jogador_atual == 1:
-                                    Jogar.desenhar_paus2(imagem_fundo3, paus)
-                                    paus1 = num_paus
-                                else:
-                                    while paus1 == num_paus:
-                                        paus, num_paus = Jogar.escolher_cores(pau_branco, pau_preto)
-                                    Jogar.desenhar_paus3(janela, paus)
-                                    paus2 = num_paus
+                                if jogador_atual<=2:
+                                    if jogador_atual == 1:
+                                        Jogar.desenhar_paus2(imagem_fundo3, paus)
+                                        paus1 = num_paus
+                                    else:
+                                        while paus1 == num_paus:
+                                            paus, num_paus = Jogar.escolher_cores(pau_branco, pau_preto)
+                                        Jogar.desenhar_paus3(janela, paus)
+                                        paus2 = num_paus
+                                        nome = "cpu"
 
                             jogadores.append(nome)
-                            box_ativado = False # Desativa a box
+                            box_ativado = True # ativa a box
                             jogador_atual += 1
-                
+                            
                         tecla = event.unicode
                         if tecla.isalpha() or tecla.isdigit() or tecla ==' ': # Verifica se o caracter é alfanumérico
                             nome += tecla # Adiciona o caracter ao nome
