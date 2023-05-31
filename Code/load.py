@@ -235,6 +235,8 @@ class Jogar_load:
             else:
                 imagens_pecas.append(None)
 
+        print(white)
+        print(black)
         for i, jogador in enumerate(jogadores):
             if turno == jogador:
                 jogador_atual = i
