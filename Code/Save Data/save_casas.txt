@@ -1,14 +1,10 @@
-Nao Ocupado
-Nao Ocupado
-Nao Ocupado
-Nao Ocupado
-Nao Ocupado
-Nao Ocupado
-Nao Ocupado
-Nao Ocupado
-Nao Ocupado
-Nao Ocupado
-Nao Ocupado
+Branco
+Preto
+Branco
+Preto
+Branco
+Preto
+Preto
 Nao Ocupado
 Nao Ocupado
 Nao Ocupado
@@ -25,16 +21,20 @@ Nao Ocupado
 Nao Ocupado
 Nao Ocupado
 Nao Ocupado
+Nao Ocupado
 Preto
 Nao Ocupado
 Nao Ocupado
-Branco
-Branco
-Branco
+Nao Ocupado
+Nao Ocupado
+Nao Ocupado
 Branco
 Nao Ocupado
-Preto
-Preto
-Preto
-Preto
+Nao Ocupado
+Nao Ocupado
+Nao Ocupado
+Nao Ocupado
+Nao Ocupado
+Nao Ocupado
+Nao Ocupado
 Nao Ocupado

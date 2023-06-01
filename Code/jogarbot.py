@@ -1,6 +1,5 @@
 import pygame
 import os
-from jogar import Jogar
 from pygame import mixer
 import random
 
@@ -14,13 +13,6 @@ class Jogarbot:
         lancamento=False
 
         return imagens_pecas, casas_ocupadas, lancamento
-    
-    def fora_tabuleiro_novo_index(start, peca, casas_ocupadas):
-        while start < len(casas_ocupadas):
-            if casas_ocupadas[start] != peca:
-                return start
-            start+=1
-        return None
 
     # Função responsável pelas posiçoes das peças fora do tabuleiro
     def fora_tabuleiro(i, imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento):
@@ -185,6 +177,7 @@ class Jogarbot:
     #---------------------VARIÁVEIS-PARA-JOGADOR---------------------
         # Vai guardar o nome do jogador
         jogadores = []
+        bot = []
         nome = ''
 
         # Cria o retângulo para inserir o nome
@@ -219,7 +212,7 @@ class Jogarbot:
         # Escolhe a cor dos paus
         paus, num_paus = Jogarbot.escolher_cores(pau_branco, pau_preto)
     #--------------------------------------------------------------
-    
+
     #------------------------TELA-JOGADORES------------------------
         while players:
             for event in pygame.event.get():
@@ -242,22 +235,19 @@ class Jogarbot:
                         if event.key == pygame.K_BACKSPACE:
                             nome = nome[:-1]#retira o ultimo item da lista
                         if event.key == pygame.K_RETURN:
-                            if enter<1:
-                                if jogador_atual<=2:
-                                    if jogador_atual == 1:
-                                        Jogarbot.desenhar_paus2(imagem_fundo3, paus)
-                                        paus1 = num_paus
-                                    else:
-                                        while paus1 == num_paus:
-                                            paus, num_paus = Jogarbot.escolher_cores(pau_branco, pau_preto)
-                                        Jogarbot.desenhar_paus3(janela, paus)
-                                        paus2 = num_paus
-                                        nome = "cpu"
-
+                            Jogarbot.desenhar_paus2(janela, paus)
+                            paus1 = num_paus
                             jogadores.append(nome)
-                            box_ativado = True # ativa a box
                             jogador_atual += 1
-                            
+
+                            while paus1 == num_paus:
+                                paus, num_paus = Jogarbot.escolher_cores(pau_branco, pau_preto)
+                            Jogarbot.desenhar_paus3(janela, paus)
+                            paus2 = num_paus
+                            nome = "CPU"
+                            jogadores.append(nome)
+                            jogador_atual += 1
+
                         tecla = event.unicode
                         if tecla.isalpha() or tecla.isdigit() or tecla ==' ': # Verifica se o caracter é alfanumérico
                             nome += tecla # Adiciona o caracter ao nome
@@ -283,7 +273,7 @@ class Jogarbot:
                 # Fecha a tela após o limite de jogadores ser atingido
                 if jogador_atual==3:
                     pygame.display.flip()
-                    pygame.time.delay(1500)# Pausa por 3000 milissegundos (3 segundos)
+                    pygame.time.delay(1500) # Pausa por 3000 milissegundos (3 segundos)
                     players = False
             #cria a box do nome
             input_box = pygame.Rect(box_coords, box_m)
@@ -296,16 +286,19 @@ class Jogarbot:
             janela.blit(imagem_fundo3, (0,0))
             pygame.display.flip()
     #--------------------------------------------------------
+
     # Desenha as paus na tela
         Jogarbot.desenhar_paus(imagem_fundo, paus)
         jogador_atual = 0
+
     #---------------------EXECUTA-JOGO---------------------
         while executando:
         #---------------------VERIFICA-EVENTOS-PARA-A-TELA DE-PAUSA---------------------
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
-                elif event.type == pygame.KEYDOWN:
+
+                if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         if not pausado:
                             # Pausa o jogo
@@ -313,7 +306,8 @@ class Jogarbot:
                         else:
                             # Retorna ao jogo
                             pausado = False
-                elif event.type == pygame.MOUSEBUTTONDOWN:
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
                     option_sound = mixer.Sound(os.path.join('sounds', 'option.mp3'))
                     option_sound.set_volume(0.4) # Define o volume para 40%
                     option_sound.play()
@@ -330,12 +324,13 @@ class Jogarbot:
                                         for casas in casas_ocupadas:
                                             save.write(casas + '\n')
                                     with open('Code\Save Data\save_turnojogador.txt', 'w') as save:
-                                            save.write(str(jogadores[jogador_atual]))
-                                    with open('Code\Save Data\save_paus.txt', 'w') as save:
-                                            save.write(str(paus))
+                                        save.write(str(jogadores[jogador_atual]))
                                     with open('Code\Save Data\save_nomes.txt', 'w') as save:
-                                            for jogador in jogadores:
-                                                save.write(f"{jogador[0]}, {jogador[1]}\n")
+                                        for jogador in jogadores:
+                                            save.write(f"{jogador[0]}, {jogador[1]}\n")
+                                    with open('Code\Save Data\index.txt', 'w') as save:
+                                        save.write(str(fora_brancas) + '\n')
+                                        save.write(str(fora_pretas))
                                 elif opcao == 'Menu':
                                     # retorna ao menu principal
                                     return
@@ -392,12 +387,13 @@ class Jogarbot:
                 for i, posicao in enumerate(posicoes_casas):
                     if casas_ocupadas[i] in ["Branco", "Preto"] and i<30:
                         # Indica que o rato está sob a peça
-                        if pygame.Rect(posicao, tamanho_novo).collidepoint(pygame.mouse.get_pos()):
+                        if pygame.Rect(posicao, tamanho_novo).collidepoint(pygame.mouse.get_pos()) and casas_ocupadas[i]==jogadores[jogador_atual][1]:
                             peca_hover = pygame.Surface((80,85), pygame.SRCALPHA)
                             pygame.draw.rect(peca_hover, (0, 0, 0, 55), peca_hover.get_rect(), border_radius=5)
                             janela.blit(peca_hover, (posicao[0]-5, posicao[1]-6))
 
-                if pygame.Rect((645, 660), tamanho_paus). collidepoint(pygame.mouse.get_pos()):
+                paus_rep = paus
+                if pygame.Rect((645, 660), tamanho_paus).collidepoint(pygame.mouse.get_pos()) and jogadores[jogador_atual][1]=="Branco" and not lancamento:
                     paus_hover = pygame.Surface((250, 150), pygame.SRCALPHA)
                     pygame.draw.rect(paus_hover, (255, 255, 255, 55), paus_hover.get_rect(), border_radius=5)
                     janela.blit(paus_hover, (640, 655))
@@ -408,7 +404,7 @@ class Jogarbot:
                             cores = ["WHITE", "BLACK"]
                             pos_x = 645
                             pos_y = 660
-                            paus_rep = paus
+                            # paus_rep = paus
                             while paus_rep==paus: # Isto permite nunca haver uma combinação de paus igual à anterior
                                 paus = []
                                 num_paus = 0
@@ -431,6 +427,36 @@ class Jogarbot:
                             for _, img_pau in paus:
                                 imagem_fundo.blit(img_pau, (pos_x, pos_y))
                                 pos_x += 70
+
+                if jogadores[jogador_atual][1]=="Preto" and not lancamento:
+                    # Escolhe a cor dos paus
+                    cores = ["WHITE", "BLACK"]
+                    pos_x = 645
+                    pos_y = 660
+                    # paus_rep = paus
+                    while paus_rep==paus: # Isto permite nunca haver uma combinação de paus igual à anterior
+                        paus = []
+                        num_paus = 0
+                        for _ in range(4):
+                            cor = random.choice(cores)
+                            if cor == "WHITE":
+                                img_pau = pau_branco
+                                num_paus +=1
+                            else:
+                                img_pau = pau_preto
+                            paus.append((cor, img_pau))
+
+                    # Define que o número de casas a andar é 5 se houver 4 paus pretos
+                    if num_paus==0:
+                        num_paus=5
+
+                    lancamento=True
+
+                    # Apresenta os paus na tela
+                    for _, img_pau in paus:
+                        imagem_fundo.blit(img_pau, (pos_x, pos_y))
+                        pos_x += 70
+
             #-------------------------------------------------------
 
             #---------------------MOVIMENTO---------------------
@@ -443,21 +469,29 @@ class Jogarbot:
                         if event.key == pygame.K_ESCAPE:
                             pausado = not pausado
 
-                    if event.type == pygame.MOUSEBUTTONDOWN:
-                        mouse_pos = pygame.mouse.get_pos()
-                        for i, pos in enumerate(posicoes_casas):
+                    for i, pos in enumerate(posicoes_casas):
+                        if event.type == pygame.MOUSEBUTTONDOWN and jogadores[jogador_atual][0]!="CPU":
+                            mouse_pos = pygame.mouse.get_pos()
                             if pygame.Rect(pos, tamanho_novo).collidepoint(mouse_pos):
-                                if pygame.mouse.get_pressed()[0]:
-                                    next_pos = i + num_paus
-                                elif pygame.mouse.get_pressed()[2]:
-                                    next_pos = i - num_paus
+                                # Controla o movimento das peças do jogador
+                                if casas_ocupadas[i]=="Branco" and lancamento==True and i<30: # Verifica qual a cor da peça clicada e se o utilizador já lançou, tal como se a mesma está dentro do tabuleiro
+                                        
+                                    if pygame.mouse.get_pressed()[0]:
+                                        next_pos = i + num_paus
+                                    elif pygame.mouse.get_pressed()[2]:
+                                        next_pos = i - num_paus
+                                    next_casa = casas_ocupadas[next_pos]
 
-                                # Controla o movimento das peças
-                                if casas_ocupadas[i] in ["Branco", "Preto"] and casas_ocupadas[i]==jogadores[jogador_atual][1] and lancamento==True: # Verifica qual a cor da peça clicada e se o utilizador já lançou
                                     pieces = mixer.Sound(os.path.join('sounds', 'pieces.mp3'))
                                     pieces.set_volume(1) # Define o volume para 40%
                                     pieces.play()
-                                    next_casa = casas_ocupadas[next_pos]
+
+                                    # Simples contador de peças do jogador no tabuleiro
+                                    contador=0
+                                    for index, ocurrencias in enumerate(casas_ocupadas):
+                                        if index<30:
+                                            if ocurrencias == jogadores[jogador_atual][1]:
+                                                contador+=1
 
                                     if next_pos>=30:
                                         block = Jogarbot.procura_block(casas_ocupadas, fora_brancas if casas_ocupadas[i]=="Branco" else fora_pretas)
@@ -471,7 +505,7 @@ class Jogarbot:
                                                 imagens_pecas, casas_ocupadas, lancamento = Jogarbot.movimento(i, imagens_pecas, casas_ocupadas, next_pos, next_casa, lancamento)
 
                                         # Casas Especiais
-                                        if i>=25:
+                                        if i>=25 and next_pos>25:
                                             if i==25:
                                                 if next_pos==26:
                                                     imagens_pecas[i], imagens_pecas[14] = imagens_pecas[14], imagens_pecas[i] # Transporta a peça para a casa 15
@@ -490,18 +524,98 @@ class Jogarbot:
                                                 if next_pos==30:
                                                     imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento = Jogarbot.fora_tabuleiro(i, imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento)
 
+                                                else:
+                                                    if contador==1:
+                                                        jogador_atual = jogador_atual + 1 if jogador_atual==0 else jogador_atual - 1
+                                                        lance = 1
+                                                        contador = 0
+                                                        lancamento = False
+
                                             if i==29:
                                                 imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento = Jogarbot.fora_tabuleiro(i, imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento)
 
-                                    # Muda de Jogador
-                                    if lance!=1:
-                                        if num_paus not in [1, 4, 5]:
-                                            jogador_atual = jogador_atual + 1 if jogador_atual==0 else jogador_atual - 1
-                                            lance = 1
-                                    else:
-                                        lance+=1
+                                        # Muda de Jogador
+                                        if lance!=1:
+                                            if num_paus not in [1, 4, 5]:
+                                                jogador_atual = jogador_atual + 1 if jogador_atual==0 else jogador_atual - 1
+                                                lance = 1
+                                        else:
+                                            lance+=1
 
-        #---------------------------------------------------------
+                        # Controla o movimento das peças do computador
+                        if jogadores[jogador_atual][0]=="CPU" and lancamento==True:
+                            bot = []
+                            for index, peca in enumerate(casas_ocupadas):
+                                if peca=="Preto" and index<30:
+                                    bot.append(index)
+
+                            peca_escolhida = random.choice(bot)
+                            movimento = random.choice([True, False])
+                            
+                            next_pos = peca_escolhida + num_paus if movimento else peca_escolhida - num_paus
+
+                            block = Jogarbot.procura_block(casas_ocupadas, next_pos)
+
+                            while block:
+                                peca_escolhida = random.choice(bot)
+                                movimento = random.choice([True, False])
+                                next_pos = peca_escolhida + num_paus if movimento else peca_escolhida - num_paus
+                                block = Jogarbot.procura_block(casas_ocupadas, next_pos)
+
+                            next_casa = casas_ocupadas[next_pos]
+
+                            contador=0
+                            for index, ocurrencias in enumerate(casas_ocupadas):
+                                if index<30:
+                                    if ocurrencias == "Preto":
+                                        contador+=1
+
+                            if not block:
+                                if peca_escolhida<=25 and next_pos<=25:
+                                    imagens_pecas, casas_ocupadas, lancamento = Jogarbot.movimento(peca_escolhida, imagens_pecas, casas_ocupadas, next_pos, next_casa, lancamento)
+
+                                # Casas Especiais
+                                if i>=25 and next_pos>25:
+                                    if i==25:
+                                        if next_pos==26:
+                                            imagens_pecas[i], imagens_pecas[14] = imagens_pecas[14], imagens_pecas[i] # Transporta a peça para a casa 15
+
+                                            casas_ocupadas[14] = "Preto" if casas_ocupadas[i] == "Preto" else "Branco"
+                                            casas_ocupadas[i] = "Nao Ocupado" if next_casa == "Nao Ocupado" else "Preto" if next_casa == "Preto" else "Branco"
+                                            lancamento=False
+
+                                        if next_pos==30:
+                                            imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento = Jogarbot.fora_tabuleiro(i, imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento)
+
+                                        if next_pos not in [26, 30]:
+                                            imagens_pecas, casas_ocupadas, lancamento = Jogarbot.movimento(i, imagens_pecas, casas_ocupadas, next_pos, next_casa, lancamento)
+
+                                    if i in [27, 28]:
+                                        if next_pos==30:
+                                            imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento = Jogarbot.fora_tabuleiro(i, imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento)
+
+                                        else:
+                                            if contador==1:
+                                                jogador_atual = jogador_atual + 1 if jogador_atual==0 else jogador_atual - 1
+                                                lance = 1
+                                                contador = 0
+                                                lancamento = False
+
+                                    if i==29:
+                                        imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento = Jogarbot.fora_tabuleiro(i, imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento)
+
+                                pygame.display.flip()
+                                pygame.time.delay(1000)
+
+                                # Mudança de Jogador
+                                if lance!=1:
+                                    if num_paus not in [1, 4, 5]:
+                                        jogador_atual = jogador_atual + 1 if jogador_atual==0 else jogador_atual - 1
+                                        lance = 1
+                                else:
+                                    lance+=1
+
+        #-------------------------------------------------------
 
         #---------------------TELA-DE-VITÓRIA---------------------
             # Verifica se houve vitória das brancas
@@ -547,7 +661,6 @@ class Jogarbot:
                             option_sound.set_volume(0.4) # Define o volume para 40%
                             option_sound.play()
                             return
-            #---------------------------------------------------
-        #-----------------------------------------------
+        #---------------------------------------------------------
             pygame.display.flip() # atualiza apenas uma porção do ecrã
     #------------------------------------------------------

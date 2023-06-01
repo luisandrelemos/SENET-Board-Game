@@ -33,6 +33,7 @@ class Jogar:
 
         return imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento
 
+    # Verifica se a casa destino não está a ser "protegida"
     def procura_block(casas_ocupadas, next_pos):
         block_index = []
         i = 0
@@ -171,7 +172,7 @@ class Jogar:
 
         fonte_path = os.path.join('Fonts','roman_sd', 'Roman SD.ttf')
         fonte_texto = pygame.font.Font(fonte_path, 25)
-    #----------------------------------------------------------------
+    #------------------------------------------------------
 
     #---------------------VARIÁVEIS-PARA-JOGADOR---------------------
         # Vai guardar os nomes
@@ -200,6 +201,7 @@ class Jogar:
         jogador_atual = 1 # Verifica o jogador atual
         lance = 1 # Verifica quantos lances foram feitos
         lancamento = False # Verifica se o jogador já lançou
+        contador = 0
     
         # Usadas para os paus de iniciais de cada jogador
         paus1 = 0
@@ -234,6 +236,7 @@ class Jogar:
                         type_sound = mixer.Sound(os.path.join('sounds', 'type.mp3'))
                         type_sound.set_volume(0.4) # Define o volume para 40%
                         type_sound.play()
+
                         if event.key == pygame.K_BACKSPACE:
                             nome = nome[:-1] # Retira o últmo item da lista
 
@@ -270,11 +273,15 @@ class Jogar:
 
                 if len(jogadores)==2:
                     if paus1>paus2:
-                        jogadores[0] = (jogadores[0], "Branco")
-                        jogadores[1] = (jogadores[1], "Preto")
+                        j = jogadores.pop(0)
+                        jogadores.insert(0, (j, "Branco"))
+                        j = jogadores.pop(1)
+                        jogadores.insert(1, (j, "Preto"))
                     else:
-                        jogadores[0] = (jogadores[0], "Preto")
-                        jogadores[1] = (jogadores[1], "Branco")
+                        j = jogadores.pop(1)
+                        jogadores.insert(0, (j, "Preto"))
+                        j = jogadores.pop(1)
+                        jogadores.insert(1, (j, "Branco"))
 
                 # Fecha a tela após o limite de jogadores ser atingido
                 if jogador_atual==3:
@@ -397,7 +404,7 @@ class Jogar:
                             pygame.draw.rect(peca_hover, (0, 0, 0, 55), peca_hover.get_rect(), border_radius=5)
                             janela.blit(peca_hover, (posicao[0]-5, posicao[1]-6))
 
-                if pygame.Rect((645, 660), tamanho_paus).collidepoint(pygame.mouse.get_pos()):
+                if pygame.Rect((645, 660), tamanho_paus).collidepoint(pygame.mouse.get_pos()) and not lancamento:
                     paus_hover = pygame.Surface((250, 150), pygame.SRCALPHA)
                     pygame.draw.rect(paus_hover, (255, 255, 255, 55), paus_hover.get_rect(), border_radius=5)
                     janela.blit(paus_hover, (640, 655))
@@ -459,6 +466,12 @@ class Jogar:
                                     pieces.play()
                                     next_casa = casas_ocupadas[next_pos]
 
+                                    contador=0
+                                    for index, ocurrencias in enumerate(casas_ocupadas):
+                                        if index<30:
+                                            if ocurrencias == jogadores[jogador_atual][1]:
+                                                contador+=1
+
                                     if next_pos>=30:
                                         block = Jogar.procura_block(casas_ocupadas, fora_brancas if casas_ocupadas[i]=="Branco" else fora_pretas)
                                     else:
@@ -491,10 +504,11 @@ class Jogar:
                                                     imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento = Jogar.fora_tabuleiro(i, imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento)
 
                                                 else:
-                                                    jogador_atual = jogador_atual + 1 if jogador_atual==0 else jogador_atual - 1
-                                                    lance = 1
-                                                    contador = 0
-                                                    lancamento = False
+                                                    if contador==1:
+                                                        jogador_atual = jogador_atual + 1 if jogador_atual==0 else jogador_atual - 1
+                                                        lance = 1
+                                                        contador = 0
+                                                        lancamento = False
 
                                             if i==29:
                                                 imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento = Jogar.fora_tabuleiro(i, imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento)

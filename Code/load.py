@@ -14,13 +14,6 @@ class Jogar_load:
 
         return imagens_pecas, casas_ocupadas, lancamento
 
-    def fora_tabuleiro_novo_index(start, peca, casas_ocupadas):
-        while start < len(casas_ocupadas):
-            if casas_ocupadas[start] != peca:
-                return start
-            start+=1
-        return None
-
     # Função responsável pelas posiçoes das peças fora do tabuleiro
     def fora_tabuleiro(i, imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento):
         imagens_pecas[i] = pygame.transform.smoothscale(imagens_pecas[i], (50, 50))
@@ -192,6 +185,7 @@ class Jogar_load:
         lance = 1 # Verifica quantos lances foram feitos
         lancamento = False # Verifica se o jogador já lançou
         jogador_atual = 0 # Verificará qual é o jogador atual
+        contador = 0
 
         # Controlam as pecas em imagens_pecas no momento de load
         white = 1
@@ -229,7 +223,7 @@ class Jogar_load:
                 jogador, peca = player.split(',')
                 peca = peca.replace(" ", "")
                 jogadores.append((jogador, peca))
-        
+
         with open('Code\Save Data\index.txt', 'r') as load:
             index = load.readlines()
             fora_brancas = int(index[0])
@@ -416,6 +410,12 @@ class Jogar_load:
                                     pieces.play()
                                     next_casa = casas_ocupadas[next_pos]
 
+                                    contador = 0
+                                    for index, ocurrencias in enumerate(casas_ocupadas):
+                                        if index<30:
+                                            if ocurrencias == jogadores[jogador_atual][1]:
+                                                contador+=1
+
                                     if next_pos>=30:
                                         block = Jogar_load.procura_block(casas_ocupadas, fora_brancas if casas_ocupadas[i]=="Branco" else fora_pretas)
                                     else:
@@ -448,10 +448,11 @@ class Jogar_load:
                                                     imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento = Jogar_load.fora_tabuleiro(i, imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento)
 
                                                 else:
-                                                    jogador_atual = jogador_atual + 1 if jogador_atual==0 else jogador_atual - 1
-                                                    lance = 1
-                                                    contador = 0
-                                                    lancamento = False
+                                                    if contador==1:
+                                                        jogador_atual = jogador_atual + 1 if jogador_atual==0 else jogador_atual - 1
+                                                        lance = 1
+                                                        contador = 0
+                                                        lancamento = False
 
                                             if i==29:
                                                 imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento = Jogar_load.fora_tabuleiro(i, imagens_pecas, casas_ocupadas, fora_brancas, fora_pretas, lancamento)
